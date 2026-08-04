@@ -1,0 +1,277 @@
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import {
+  ArrowRight, Star, MapPin, CheckCircle2, Sparkles,
+  Search, CalendarCheck, Handshake, PartyPopper, Award,
+  ChevronRight
+} from 'lucide-react';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+import { useInView } from '../hooks/useInView';
+import { supabase } from '../lib/supabase';
+import type { Vendor } from '../lib/supabase';
+import { CATEGORIES } from '../lib/categories';
+import { dataCache } from '../lib/cache';
+
+export default function ExplorePage() {
+  const navigate = useNavigate();
+  const [vendors, setVendors] = useState<Vendor[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [hoveredCat, setHoveredCat] = useState<number | null>(null);
+
+  const heroRef = useInView<HTMLDivElement>();
+  const categoriesRef = useInView<HTMLDivElement>();
+  const featuredRef = useInView<HTMLDivElement>();
+  const howItWorksRef = useInView<HTMLDivElement>();
+  const ctaRef = useInView<HTMLDivElement>();
+
+  useEffect(() => {
+    const cached = dataCache.get<Vendor[]>('top_featured_vendors');
+    if (cached && cached.length > 0) {
+      setVendors(cached);
+      setLoading(false);
+    }
+
+    dataCache
+      .fetchWithCache('top_featured_vendors', async () => {
+        const { data } = await supabase.from('vendors').select('*').order('rating', { ascending: false }).limit(6);
+        return data || [];
+      })
+      .then((data) => {
+        setVendors(data ?? []);
+        setLoading(false);
+      });
+  }, []);
+
+  return (
+    <>
+      <Navbar />
+      <div className="min-h-screen bg-cream-50/50 pt-16">
+        {/* Hero */}
+        <section ref={heroRef.ref} className="bg-gradient-to-br from-sage-900 to-sage-800 py-20 relative overflow-hidden">
+          <div className="orb w-96 h-96 bg-sage-600/20 -top-20 -left-20" />
+          <div className="orb w-72 h-72 bg-gold-500/10 bottom-0 right-10" style={{ animationDelay: '2s' }} />
+          <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-5">
+              <Sparkles className="w-4 h-4 text-gold-400" />
+              <span className="text-white text-sm font-bold">Explore Services</span>
+            </div>
+            <h1 className={`font-display text-4xl md:text-5xl font-bold text-white mb-4 transition-all duration-700 ${heroRef.inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+              Discover Everything You Need <br /> for Your <span className="text-gradient-gold">Perfect Event</span>
+            </h1>
+            <p className={`text-sage-200 text-lg max-w-2xl mx-auto font-medium transition-all duration-700 delay-200 ${heroRef.inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+              From photographers to pandits, DJs to decorators — browse all 14 event service categories in one place.
+            </p>
+          </div>
+        </section>
+
+        {/* Categories Grid — Glossy Animated Cards */}
+        <section className="py-16 bg-white relative overflow-hidden">
+          <div className="absolute inset-0 bg-hero-pattern" />
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div ref={categoriesRef.ref} className={`text-center mb-12 transition-all duration-700 ${categoriesRef.inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+              <span className="inline-block text-sage-600 text-sm font-bold tracking-widest uppercase mb-3">Browse by Category</span>
+              <h2 className="font-display text-3xl md:text-4xl font-bold text-sage-900 mb-3">Explore Our Services</h2>
+              <p className="text-dark-500 text-lg font-medium">14 categories, 2,500+ verified vendors — find the perfect match for your event</p>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
+              {CATEGORIES.map((cat, i) => (
+                <button
+                  key={cat.label}
+                  onClick={() => navigate(`/category/${encodeURIComponent(cat.label)}`)}
+                  onMouseEnter={() => setHoveredCat(i)}
+                  onMouseLeave={() => setHoveredCat(null)}
+                  className={`group relative bg-white rounded-2xl p-5 border-2 transition-all duration-500 text-center overflow-hidden ${
+                    hoveredCat === i
+                      ? 'border-sage-400 shadow-card-hover scale-105 -translate-y-1'
+                      : 'border-sage-100 hover:border-sage-200'
+                  } ${categoriesRef.inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                  style={{ transitionDelay: `${i * 50}ms` }}
+                >
+                  {/* Glossy overlay */}
+                  <div className={`absolute inset-0 transition-opacity duration-500 ${hoveredCat === i ? 'opacity-100' : 'opacity-0'}`}>
+                    <div className="absolute inset-0 bg-gradient-to-br from-sage-50 via-transparent to-gold-50/30" />
+                    <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-white/40 to-transparent" />
+                  </div>
+
+                  <div className="relative">
+                    <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${cat.gradient} flex items-center justify-center mb-3 mx-auto transition-transform duration-300 ${hoveredCat === i ? 'scale-110 rotate-3' : ''}`}>
+                      <cat.icon className="w-6 h-6 text-white" />
+                    </div>
+                    <p className="font-bold text-sage-900 text-sm mb-1">{cat.label}</p>
+                    <p className="text-dark-400 text-xs">{cat.startingPrice}</p>
+                    <div className={`flex items-center justify-center gap-1 mt-2 text-sage-600 text-xs font-bold transition-all ${hoveredCat === i ? 'opacity-100' : 'opacity-0'}`}>
+                      Explore <ChevronRight className="w-3 h-3" />
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Featured Vendors */}
+        <section className="py-16 bg-cream-50/50 relative overflow-hidden">
+          <div className="absolute inset-0 bg-hero-pattern" />
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div ref={featuredRef.ref} className={`flex items-end justify-between mb-10 transition-all duration-700 ${featuredRef.inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+              <div>
+                <span className="inline-block text-sage-600 text-sm font-bold tracking-widest uppercase mb-2">Top Rated</span>
+                <h2 className="font-display text-3xl font-bold text-sage-900">Featured Vendors</h2>
+              </div>
+              <button onClick={() => navigate('/vendors')} className="text-sage-600 font-bold text-sm hover:underline flex items-center gap-1">
+                View All <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+
+            {loading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[1, 2, 3, 4, 5, 6].map(i => (
+                  <div key={i} className="bg-white rounded-2xl shadow-card p-4 animate-pulse">
+                    <div className="w-full h-48 bg-sage-100 rounded-xl mb-4" />
+                    <div className="h-4 bg-sage-100 rounded w-3/4 mb-2" />
+                    <div className="h-3 bg-sage-100 rounded w-1/2" />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {vendors.map((vendor, i) => (
+                  <div
+                    key={vendor.id}
+                    onClick={() => navigate(`/vendors/${vendor.slug}`)}
+                    className={`group bg-white rounded-2xl shadow-card overflow-hidden cursor-pointer card-hover transition-all duration-700 ${featuredRef.inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                    style={{ transitionDelay: `${i * 100}ms` }}
+                  >
+                    <div className="relative h-48 overflow-hidden">
+                      {vendor.image && !vendor.image.includes('pexels.com') ? (
+                        <img src={vendor.image} alt={vendor.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-sage-700 to-sage-900 flex items-center justify-center">
+                          <span className="text-white/35 text-5xl font-display font-bold">{vendor.category[0] || 'V'}</span>
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-dark-900/60 to-transparent" />
+                      {vendor.badge && (
+                        <span className={`absolute top-3 left-3 ${vendor.badge_color} text-white text-xs font-bold px-2.5 py-1 rounded-full`}>{vendor.badge}</span>
+                      )}
+                      <div className="absolute bottom-3 left-3 flex items-center gap-1">
+                        <Star className="w-4 h-4 text-gold-400 fill-gold-400" />
+                        <span className="text-white font-bold text-sm">{vendor.rating}</span>
+                        <span className="text-white/70 text-xs">({vendor.reviews})</span>
+                      </div>
+                    </div>
+                    <div className="p-4">
+                      <h3 className="font-display font-bold text-sage-900 text-lg mb-1">{vendor.name}</h3>
+                      <div className="flex items-center gap-2 text-dark-500 text-sm mb-2">
+                        <MapPin className="w-3.5 h-3.5" /> {vendor.location}
+                        <span className="text-dark-300">·</span>
+                        <span>{vendor.category}</span>
+                      </div>
+                      <div className="flex items-center justify-between pt-3 border-t border-sage-50">
+                        <div>
+                          <span className="text-dark-400 text-xs">Starting from</span>
+                          <p className="font-display font-bold text-sage-900">{vendor.price_unit}{Number(vendor.price_amount).toLocaleString('en-IN')}</p>
+                        </div>
+                        <div className="w-9 h-9 rounded-xl bg-sage-50 group-hover:bg-sage-100 flex items-center justify-center transition-colors">
+                          <ArrowRight className="w-4 h-4 text-sage-600 group-hover:translate-x-0.5 transition-transform" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* How It Works */}
+        <section ref={howItWorksRef.ref} className="py-20 bg-white relative overflow-hidden">
+          <div className="absolute inset-0 bg-hero-pattern" />
+          <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className={`text-center mb-14 transition-all duration-700 ${howItWorksRef.inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+              <span className="inline-block text-sage-600 text-sm font-bold tracking-widest uppercase mb-3">Simple Process</span>
+              <h2 className="font-display text-3xl md:text-4xl font-bold text-sage-900 mb-3">
+                How Festivo <span className="text-gradient">Works</span>
+              </h2>
+              <p className="text-dark-500 text-lg max-w-xl mx-auto font-medium">
+                From discovery to celebration — we make event planning effortless.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {[
+                { step: '01', icon: Search, title: 'Discover', desc: 'Browse 2,500+ verified vendors across India. Filter by category, budget, rating, and location.', color: 'from-sage-500 to-sage-700' },
+                { step: '02', icon: CalendarCheck, title: 'Plan', desc: 'Select your event type, date, and guest count. Compare packages side-by-side to build your ideal event.', color: 'from-cream-500 to-cream-700' },
+                { step: '03', icon: Handshake, title: 'Book', desc: 'Reserve your vendor with secure online payment. Get instant confirmation and connect directly.', color: 'from-sage-600 to-sage-800' },
+                { step: '04', icon: PartyPopper, title: 'Celebrate', desc: 'Enjoy your event while our vendors deliver excellence. Track everything with post-event support.', color: 'from-gold-500 to-gold-700' },
+              ].map(({ step, icon: Icon, title, desc, color }, i) => (
+                <div
+                  key={step}
+                  className={`text-center transition-all duration-700 ${howItWorksRef.inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                  style={{ transitionDelay: `${i * 120}ms` }}
+                >
+                  <div className="relative inline-flex mb-5">
+                    <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${color} flex items-center justify-center shadow-glow`}>
+                      <Icon className="w-8 h-8 text-white" />
+                    </div>
+                    <div className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-white border-2 border-sage-200 flex items-center justify-center shadow-soft">
+                      <span className="text-[10px] font-bold text-sage-700">{step}</span>
+                    </div>
+                  </div>
+                  <h3 className="font-display text-sage-900 font-bold text-xl mb-2">{title}</h3>
+                  <p className="text-dark-500 text-sm leading-relaxed font-medium">{desc}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className={`text-center mt-14 transition-all duration-700 ${howItWorksRef.inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+              <button
+                onClick={() => navigate('/vendors')}
+                className="inline-flex items-center gap-3 px-10 py-4 bg-gradient-brand text-white font-bold text-lg rounded-2xl hover:shadow-glow hover:scale-105 transition-all duration-300 active:scale-95"
+              >
+                Start Planning Your Event
+                <ArrowRight className="w-5 h-5" />
+              </button>
+              <p className="text-dark-400 text-sm mt-4 font-medium">No upfront payment required. Free to browse.</p>
+            </div>
+          </div>
+        </section>
+
+        {/* Final CTA */}
+        <section ref={ctaRef.ref} className="py-20 bg-gradient-to-br from-sage-900 to-sage-800 relative overflow-hidden">
+          <div className="orb w-96 h-96 bg-gold-500/10 -top-20 -right-20" />
+          <div className="orb w-72 h-72 bg-sage-600/20 -bottom-20 -left-20" style={{ animationDelay: '2s' }} />
+          <div className={`relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center transition-all duration-700 ${ctaRef.inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-5">
+              <Award className="w-4 h-4 text-gold-400" />
+              <span className="text-white text-sm font-bold">Trusted by 50,000+ customers</span>
+            </div>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-white mb-4">
+              Ready to Plan Your <span className="text-gradient-gold">Perfect Event?</span>
+            </h2>
+            <p className="text-sage-200 text-lg mb-8 max-w-2xl mx-auto font-medium">
+              Join thousands of happy customers who found their dream vendors on Festivo.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <button
+                onClick={() => navigate('/vendors')}
+                className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-gradient-brand text-white font-bold rounded-xl hover:shadow-glow hover:scale-105 transition-all"
+              >
+                Browse All Vendors <ArrowRight className="w-5 h-5" />
+              </button>
+              <button
+                onClick={() => navigate('/budget-planner')}
+                className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl transition-all"
+              >
+                Plan Your Budget
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+      <Footer />
+    </>
+  );
+}
