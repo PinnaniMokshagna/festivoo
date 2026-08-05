@@ -178,25 +178,6 @@ export default function Hero() {
             </div>
           </div>
         </div>
-
-        {/* Stats */}
-        <div className={`flex flex-wrap justify-center gap-8 mt-14 transition-all duration-700 ${loaded ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '0.6s' }}>
-          {[
-            { icon: Users, value: '50,000+', label: 'Happy Clients' },
-            { icon: Award, value: '2,500+', label: 'Verified Vendors' },
-            { icon: Star, value: '4.9 / 5', label: 'Average Rating' },
-          ].map(({ icon: Icon, value, label }) => (
-            <div key={label} className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-white/15 backdrop-blur-sm flex items-center justify-center border border-white/20">
-                <Icon className="w-5 h-5 text-gold-400" />
-              </div>
-              <div className="text-left">
-                <p className="text-white font-bold text-lg leading-none drop-shadow">{value}</p>
-                <p className="text-white/80 text-xs mt-0.5 font-medium">{label}</p>
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
 
       {/* Slide indicators */}
