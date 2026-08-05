@@ -12,7 +12,7 @@ import { supabase } from '../lib/supabase';
 import type { Vendor } from '../lib/supabase';
 import { CATEGORIES } from '../lib/categories';
 import { dataCache } from '../lib/cache';
-import { MOCK_VENDORS } from '../lib/vendors';
+import { MOCK_VENDORS, getVendorImageAndGallery } from '../lib/vendors';
 
 export default function ExplorePage() {
   const navigate = useNavigate();
@@ -79,34 +79,37 @@ export default function ExplorePage() {
               <p className="text-dark-500 text-lg font-medium">14 categories, 2,500+ verified vendors — find the perfect match for your event</p>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-3">
               {CATEGORIES.map((cat, i) => (
                 <button
                   key={cat.label}
                   onClick={() => navigate(`/category/${encodeURIComponent(cat.label)}`)}
                   onMouseEnter={() => setHoveredCat(i)}
                   onMouseLeave={() => setHoveredCat(null)}
-                  className={`group relative bg-white rounded-2xl p-5 border-2 transition-all duration-500 text-center overflow-hidden ${
+                  className={`group relative bg-white rounded-2xl border-2 transition-all duration-300 text-left overflow-hidden flex flex-col h-44 sm:h-48 ${
                     hoveredCat === i
-                      ? 'border-sage-400 shadow-card-hover scale-105 -translate-y-1'
-                      : 'border-sage-100 hover:border-sage-200'
+                      ? 'border-sage-600 ring-4 ring-sage-600/10 shadow-lg scale-[1.03] -translate-y-1'
+                      : 'border-sage-100/80 hover:border-sage-300 shadow-xs'
                   } ${categoriesRef.inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-                  style={{ transitionDelay: `${i * 50}ms` }}
+                  style={{ transitionDelay: `${i * 30}ms` }}
                 >
-                  {/* Glossy overlay */}
-                  <div className={`absolute inset-0 transition-opacity duration-500 ${hoveredCat === i ? 'opacity-100' : 'opacity-0'}`}>
-                    <div className="absolute inset-0 bg-gradient-to-br from-sage-50 via-transparent to-gold-50/30" />
-                    <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-white/40 to-transparent" />
+                  {/* Top Image Section (80%) */}
+                  <div className="relative h-[80%] w-full overflow-hidden flex-shrink-0 bg-cream-100">
+                    <img
+                      src={cat.image}
+                      alt={cat.label}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-108"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-dark-950/40 via-transparent to-transparent pointer-events-none" />
                   </div>
 
-                  <div className="relative">
-                    <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${cat.gradient} flex items-center justify-center mb-3 mx-auto transition-transform duration-300 ${hoveredCat === i ? 'scale-110 rotate-3' : ''}`}>
-                      <cat.icon className="w-6 h-6 text-white" />
-                    </div>
-                    <p className="font-bold text-sage-900 text-sm mb-1">{cat.label}</p>
-                    <p className="text-dark-400 text-xs">{cat.startingPrice}</p>
-                    <div className={`flex items-center justify-center gap-1 mt-2 text-sage-600 text-xs font-bold transition-all ${hoveredCat === i ? 'opacity-100' : 'opacity-0'}`}>
-                      Explore <ChevronRight className="w-3 h-3" />
+                  {/* Bottom Category Label Section (20%) */}
+                  <div className="h-[20%] w-full flex items-center justify-between px-4 bg-white border-t border-sage-50">
+                    <p className="font-display font-bold text-sage-950 text-sm truncate group-hover:text-sage-700 transition-colors">{cat.label}</p>
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center transition-all flex-shrink-0 ${
+                      hoveredCat === i ? 'bg-sage-600 text-white shadow-xs' : 'bg-sage-50 text-sage-500'
+                    }`}>
+                      <ChevronRight className="w-3.5 h-3.5" />
                     </div>
                   </div>
                 </button>
@@ -141,22 +144,18 @@ export default function ExplorePage() {
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {vendors.map((vendor, i) => (
-                  <div
-                    key={vendor.id}
-                    onClick={() => navigate(`/vendors/${vendor.slug}`)}
-                    className={`group bg-white rounded-2xl shadow-card overflow-hidden cursor-pointer card-hover transition-all duration-700 ${featuredRef.inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-                    style={{ transitionDelay: `${i * 100}ms` }}
-                  >
-                    <div className="relative h-48 overflow-hidden">
-                      {vendor.image && !vendor.image.includes('pexels.com') ? (
-                        <img src={vendor.image} alt={vendor.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                      ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-sage-700 to-sage-900 flex items-center justify-center">
-                          <span className="text-white/35 text-5xl font-display font-bold">{vendor.category[0] || 'V'}</span>
-                        </div>
-                      )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-dark-900/60 to-transparent" />
+                {vendors.map((vendor, i) => {
+                  const { image: vendorImage } = getVendorImageAndGallery(vendor);
+                  return (
+                    <div
+                      key={vendor.id}
+                      onClick={() => navigate(`/vendors/${vendor.slug}`)}
+                      className={`group bg-white rounded-2xl shadow-card overflow-hidden cursor-pointer card-hover transition-all duration-700 ${featuredRef.inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                      style={{ transitionDelay: `${i * 100}ms` }}
+                    >
+                      <div className="relative h-48 overflow-hidden">
+                        <img src={vendorImage} alt={vendor.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-dark-900/60 to-transparent" />
                       {vendor.badge && (
                         <span className={`absolute top-3 left-3 ${vendor.badge_color} text-white text-xs font-bold px-2.5 py-1 rounded-full`}>{vendor.badge}</span>
                       )}
@@ -184,7 +183,8 @@ export default function ExplorePage() {
                       </div>
                     </div>
                   </div>
-                ))}
+                );
+              })}
               </div>
             )}
           </div>
