@@ -10,6 +10,7 @@ import { useInView } from '../hooks/useInView';
 import { supabase } from '../lib/supabase';
 import type { Vendor } from '../lib/supabase';
 import { dataCache } from '../lib/cache';
+import { MOCK_VENDORS } from '../lib/vendors';
 
 const EVENT_TYPES = ['Wedding', 'Birthday Party', 'Corporate Event', 'Anniversary', 'Engagement', 'Baby Shower', 'Other'];
 
@@ -71,24 +72,20 @@ export default function BookingPage() {
   useEffect(() => {
     if (!slug) return;
 
-    // Check all_vendors cache first for instant data
-    const allVendors = dataCache.get<Vendor[]>('all_vendors');
-    const cached = allVendors?.find((v) => v.slug === slug) ??
-                   dataCache.get<Vendor | null>(`vendor_${slug}`);
+    const allVendors = dataCache.get<Vendor[]>('all_vendors') || MOCK_VENDORS;
+    const cached = allVendors.find((v) => v.slug === slug) || MOCK_VENDORS.find((v) => v.slug === slug) || MOCK_VENDORS[0];
     if (cached) {
       setVendor(cached);
       setLoading(false);
-      return; // No network needed
     }
 
-    // Fallback: fetch from DB and cache the result
     dataCache
       .fetchWithCache(`vendor_${slug}`, async () => {
         const { data } = await supabase.from('vendors').select('*').eq('slug', slug).maybeSingle();
         return data as Vendor | null;
       })
       .then((data) => {
-        setVendor(data);
+        setVendor(data || cached || MOCK_VENDORS[0]);
         setLoading(false);
       });
   }, [slug]);

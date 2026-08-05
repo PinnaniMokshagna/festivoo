@@ -7,6 +7,7 @@ import { useInView } from '../hooks/useInView';
 import { supabase } from '../lib/supabase';
 import type { Vendor } from '../lib/supabase';
 import { dataCache } from '../lib/cache';
+import { MOCK_VENDORS, getVendorImageAndGallery } from '../lib/vendors';
 
 import { CATEGORY_LABELS } from '../lib/categories';
 const CATEGORIES = ['All', ...CATEGORY_LABELS];
@@ -29,28 +30,22 @@ function VendorCard({ vendor }: { vendor: Vendor }) {
   const [imgLoaded, setImgLoaded] = useState(false);
   const navigate = useNavigate();
 
-  const hasImage = vendor.image && !vendor.image.includes('pexels.com');
+  const { image: vendorImage } = getVendorImageAndGallery(vendor);
 
   return (
     <div className="group bg-white rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 border border-cream-200/60 card-hover flex flex-col h-full">
       <div className="relative h-52 overflow-hidden cursor-pointer flex-shrink-0" onClick={() => navigate(`/vendors/${vendor.slug}`)}>
-        {hasImage ? (
-          <>
-            <div className={`absolute inset-0 bg-cream-100 transition-opacity duration-500 ${imgLoaded ? 'opacity-0' : 'opacity-100'}`} />
-            <img
-              src={vendor.image}
-              alt={vendor.name}
-              loading="lazy"
-              decoding="async"
-              className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-105 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
-              onLoad={() => setImgLoaded(true)}
-            />
-          </>
-        ) : (
-          <div className="w-full h-full bg-gradient-to-br from-sage-700 to-sage-900 flex items-center justify-center">
-            <span className="text-white/30 text-5xl font-display font-bold">{vendor.category[0] || 'V'}</span>
-          </div>
-        )}
+        <>
+          <div className={`absolute inset-0 bg-cream-100 transition-opacity duration-500 ${imgLoaded ? 'opacity-0' : 'opacity-100'}`} />
+          <img
+            src={vendorImage}
+            alt={vendor.name}
+            loading="lazy"
+            decoding="async"
+            className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-105 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
+            onLoad={() => setImgLoaded(true)}
+          />
+        </>
         <div className="absolute inset-0 bg-gradient-to-t from-dark-900/60 to-transparent" />
         {vendor.badge && (
           <div className="absolute top-3 left-3">
@@ -118,7 +113,7 @@ export default function VendorsPage() {
   const [priceRange, setPriceRange] = useState(0);
   const [showFilters, setShowFilters] = useState(false);
   const [occasionLabel, setOccasionLabel] = useState('');
-  const { ref: gridRef, inView: gridInView } = useInView<HTMLDivElement>();
+  const { ref: gridRef, inView: gridInView } = useInView<HTMLDivElement>(0);
 
   useEffect(() => {
     const category = searchParams.get('category');
@@ -132,19 +127,23 @@ export default function VendorsPage() {
   }, [searchParams]);
 
   useEffect(() => {
-    // Serve from cache instantly if available, then refresh in background
     const cached = dataCache.get<Vendor[]>('all_vendors');
     if (cached && cached.length > 0) {
       setVendors(cached);
       setLoading(false);
+    } else {
+      setVendors(MOCK_VENDORS);
+      setLoading(false);
     }
+
     dataCache
       .fetchWithCache('all_vendors', async () => {
         const { data } = await supabase.from('vendors').select('*');
-        return data || [];
+        return (data && data.length > 0) ? data : MOCK_VENDORS;
       })
       .then((data) => {
-        if (data) setVendors(data);
+        if (data && data.length > 0) setVendors(data);
+        else setVendors(MOCK_VENDORS);
         setLoading(false);
       });
   }, []);
@@ -295,7 +294,7 @@ export default function VendorsPage() {
                   </button>
                 </div>
               ) : (
-                <div ref={gridRef} className={`grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 animate-on-scroll ${gridInView ? 'in-view' : ''}`}>
+                <div ref={gridRef} className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                   {filtered.map(vendor => <VendorCard key={vendor.id} vendor={vendor} />)}
                 </div>
               )}

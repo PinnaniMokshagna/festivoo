@@ -22,6 +22,9 @@ type AuthContextType = {
   signUp: (email: string, password: string, name: string, role: UserRole) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
+  sendOtp: (email: string) => Promise<{ error: string | null }>;
+  verifyOtp: (email: string, token: string) => Promise<{ error: string | null }>;
+  updatePassword: (password: string) => Promise<{ error: string | null }>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -103,8 +106,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setProfile(null);
   };
 
+  // Step 1: Send a 6-digit OTP to the user's email
+  const sendOtp = async (email: string) => {
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: { shouldCreateUser: false }, // only allow existing users
+    });
+    return { error: error?.message ?? null };
+  };
+
+  // Step 2: Verify the 6-digit OTP entered by user
+  const verifyOtp = async (email: string, token: string) => {
+    const { error } = await supabase.auth.verifyOtp({ email, token, type: 'email' });
+    return { error: error?.message ?? null };
+  };
+
+  // Step 3: Update password after OTP verification (user is now signed in)
+  const updatePassword = async (password: string) => {
+    const { error } = await supabase.auth.updateUser({ password });
+    return { error: error?.message ?? null };
+  };
+
   return (
-    <AuthContext.Provider value={{ session, user, profile, loading, signIn, signUp, signOut, refreshProfile }}>
+    <AuthContext.Provider value={{ session, user, profile, loading, signIn, signUp, signOut, refreshProfile, sendOtp, verifyOtp, updatePassword }}>
       {children}
     </AuthContext.Provider>
   );

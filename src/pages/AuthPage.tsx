@@ -40,7 +40,7 @@ const customerSlides = [
 
 export default function AuthPage() {
   const navigate = useNavigate();
-  const { signIn, signUp, user } = useAuth();
+  const { signIn, signUp, user, sendOtp, verifyOtp, updatePassword } = useAuth();
 
   const [role, setRole] = useState<UserRole | null>(null);
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
@@ -52,6 +52,14 @@ export default function AuthPage() {
   const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [slideIndex, setSlideIndex] = useState(0);
+  const [screen, setScreen] = useState<'form' | 'forgot'>('form');
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [forgotStep, setForgotStep] = useState<1 | 2 | 3>(1); // 1=email, 2=OTP, 3=new password
+  const [forgotOtp, setForgotOtp] = useState('');
+  const [forgotNewPassword, setForgotNewPassword] = useState('');
+  const [forgotShowPassword, setForgotShowPassword] = useState(false);
+  const [forgotError, setForgotError] = useState('');
+  const [forgotLoading, setForgotLoading] = useState(false);
 
   const slides = role === 'vendor' ? vendorSlides : customerSlides;
 
@@ -104,6 +112,46 @@ export default function AuthPage() {
     setName('');
     setEmail('');
     setPassword('');
+    setScreen('form');
+    setForgotEmail('');
+    setForgotStep(1);
+    setForgotOtp('');
+    setForgotNewPassword('');
+    setForgotError('');
+  };
+
+  // Step 1: Send OTP to email
+  const handleSendOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!forgotEmail.trim()) { setForgotError('Please enter your email address'); return; }
+    setForgotLoading(true); setForgotError('');
+    const { error } = await sendOtp(forgotEmail.trim());
+    setForgotLoading(false);
+    if (error) { setForgotError('No account found with this email address.'); return; }
+    setForgotStep(2);
+  };
+
+  // Step 2: Verify OTP code
+  const handleVerifyOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (forgotOtp.length !== 6) { setForgotError('Please enter the full 6-digit code'); return; }
+    setForgotLoading(true); setForgotError('');
+    const { error } = await verifyOtp(forgotEmail.trim(), forgotOtp.trim());
+    setForgotLoading(false);
+    if (error) { setForgotError('Invalid or expired code. Please try again.'); return; }
+    setForgotStep(3);
+  };
+
+  // Step 3: Set new password
+  const handleUpdatePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (forgotNewPassword.length < 6) { setForgotError('Password must be at least 6 characters'); return; }
+    setForgotLoading(true); setForgotError('');
+    const { error } = await updatePassword(forgotNewPassword);
+    setForgotLoading(false);
+    if (error) { setForgotError(error); return; }
+    // Success — navigate to dashboard
+    navigate(role === 'vendor' ? '/vendor-dashboard' : '/dashboard');
   };
 
   const slide = slides[slideIndex] ?? slides[0];
@@ -114,6 +162,34 @@ export default function AuthPage() {
   // No role selected yet → show role selection screen
   if (!role) {
     return <RoleSelectionScreen mounted={mounted} onSelect={setRole} onBack={() => navigate('/')} />;
+  }
+
+  // Forgot password / OTP screen
+  if (screen === 'forgot') {
+    return (
+      <ForgotPasswordScreen
+        role={role}
+        step={forgotStep}
+        email={forgotEmail}
+        otp={forgotOtp}
+        newPassword={forgotNewPassword}
+        showPassword={forgotShowPassword}
+        onEmailChange={setForgotEmail}
+        onOtpChange={setForgotOtp}
+        onNewPasswordChange={setForgotNewPassword}
+        onToggleShowPassword={() => setForgotShowPassword(p => !p)}
+        onSendOtp={handleSendOtp}
+        onVerifyOtp={handleVerifyOtp}
+        onUpdatePassword={handleUpdatePassword}
+        loading={forgotLoading}
+        error={forgotError}
+        onBack={() => {
+          if (forgotStep === 1) { setScreen('form'); }
+          else { setForgotStep(s => (s - 1) as 1 | 2 | 3); }
+          setForgotError('');
+        }}
+      />
+    );
   }
 
   // Role selected → show auth form
@@ -344,7 +420,11 @@ export default function AuthPage() {
 
                 {mode === 'signin' && (
                   <div className="flex justify-end">
-                    <button type="button" className="text-sage-600 text-sm font-bold hover:underline">
+                    <button
+                      type="button"
+                      onClick={() => { setScreen('forgot'); setForgotEmail(email); }}
+                      className="text-sage-600 text-sm font-bold hover:underline"
+                    >
                       Forgot password?
                     </button>
                   </div>
@@ -406,6 +486,169 @@ export default function AuthPage() {
         </div>
       </div>
     </>
+  );
+}
+
+/* ── Forgot Password Screen (OTP) ───────────────────────────────── */
+
+function ForgotPasswordScreen({
+  role, step, email, otp, newPassword, showPassword,
+  onEmailChange, onOtpChange, onNewPasswordChange, onToggleShowPassword,
+  onSendOtp, onVerifyOtp, onUpdatePassword,
+  loading, error, onBack,
+}: {
+  role: UserRole;
+  step: 1 | 2 | 3;
+  email: string;
+  otp: string;
+  newPassword: string;
+  showPassword: boolean;
+  onEmailChange: (v: string) => void;
+  onOtpChange: (v: string) => void;
+  onNewPasswordChange: (v: string) => void;
+  onToggleShowPassword: () => void;
+  onSendOtp: (e: React.FormEvent) => void;
+  onVerifyOtp: (e: React.FormEvent) => void;
+  onUpdatePassword: (e: React.FormEvent) => void;
+  loading: boolean;
+  error: string;
+  onBack: () => void;
+}) {
+  const isVendor = role === 'vendor';
+  const accent = isVendor ? 'bg-sage-900' : 'bg-sage-100';
+  const accentIcon = isVendor ? 'text-gold-400' : 'text-sage-600';
+  const stepLabels = ['Email', 'Verify OTP', 'New Password'];
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-cream-50 px-4 pt-20">
+      <div className="w-full max-w-md">
+        <div className="bg-white rounded-3xl shadow-card-hover border border-sage-100 p-8">
+
+          {/* Back */}
+          <button onClick={onBack} className="flex items-center gap-2 text-dark-500 hover:text-sage-700 transition-colors mb-6 group">
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+            <span className="text-sm font-bold">{step === 1 ? 'Back to Sign In' : 'Back'}</span>
+          </button>
+
+          {/* Step indicators */}
+          <div className="flex items-center mb-6">
+            {stepLabels.map((label, i) => (
+              <div key={i} className="flex items-center flex-1">
+                <div className="flex flex-col items-center gap-1">
+                  <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
+                    i + 1 < step ? 'bg-sage-600 text-white' :
+                    i + 1 === step ? (isVendor ? 'bg-sage-900 text-gold-400' : 'bg-sage-600 text-white') :
+                    'bg-sage-100 text-dark-400'
+                  }`}>
+                    {i + 1 < step ? <CheckCircle2 className="w-4 h-4" /> : i + 1}
+                  </div>
+                  <span className={`text-xs font-bold whitespace-nowrap ${i + 1 === step ? 'text-sage-800' : 'text-dark-400'}`}>{label}</span>
+                </div>
+                {i < 2 && <div className={`h-px flex-1 mx-2 mb-4 ${i + 1 < step ? 'bg-sage-400' : 'bg-sage-100'}`} />}
+              </div>
+            ))}
+          </div>
+
+          {/* Icon */}
+          <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 ${accent}`}>
+            {step === 1 && <Mail className={`w-6 h-6 ${accentIcon}`} />}
+            {step === 2 && <Shield className={`w-6 h-6 ${accentIcon}`} />}
+            {step === 3 && <Lock className={`w-6 h-6 ${accentIcon}`} />}
+          </div>
+
+          {/* STEP 1: Email */}
+          {step === 1 && (
+            <>
+              <h2 className="font-display text-2xl font-bold text-sage-900 mb-1">Forgot password?</h2>
+              <p className="text-dark-500 text-sm font-medium mb-6">
+                Enter your {isVendor ? 'vendor' : 'customer'} account email. We'll send a 6-digit OTP code instantly.
+              </p>
+              <form onSubmit={onSendOtp} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-dark-600 uppercase tracking-wider mb-1.5">Email Address</label>
+                  <div className="relative">
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-dark-400"><Mail className="w-4 h-4" /></div>
+                    <input type="email" value={email} onChange={e => onEmailChange(e.target.value)}
+                      placeholder="your@email.com" required
+                      className="w-full pl-10 pr-4 py-3 border border-sage-200 rounded-xl text-sm text-dark-800 bg-white outline-none focus:ring-2 focus:ring-sage-300 focus:border-sage-400 hover:border-sage-300 font-medium transition-all" />
+                  </div>
+                </div>
+                {error && <div className="p-3 bg-red-50 border border-red-200 rounded-xl"><p className="text-red-700 text-sm font-bold">{error}</p></div>}
+                <button type="submit" disabled={loading}
+                  className="w-full py-3.5 bg-gradient-brand text-white font-bold rounded-xl hover:shadow-glow hover:scale-[1.01] transition-all duration-300 active:scale-95 disabled:opacity-70 flex items-center justify-center gap-2">
+                  {loading ? <><div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />Sending OTP...</> : <>Send OTP Code <ArrowRight className="w-4 h-4" /></>}
+                </button>
+              </form>
+            </>
+          )}
+
+          {/* STEP 2: OTP */}
+          {step === 2 && (
+            <>
+              <h2 className="font-display text-2xl font-bold text-sage-900 mb-1">Enter OTP Code</h2>
+              <p className="text-dark-500 text-sm font-medium mb-1">6-digit code sent to:</p>
+              <p className="text-sage-700 font-bold text-sm mb-5 break-all">{email}</p>
+              <form onSubmit={onVerifyOtp} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-dark-600 uppercase tracking-wider mb-2">OTP Code</label>
+                  <input
+                    type="text"
+                    value={otp}
+                    onChange={e => onOtpChange(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                    placeholder="000000"
+                    maxLength={6}
+                    required
+                    autoFocus
+                    className="w-full px-4 py-4 border-2 border-sage-200 rounded-xl text-3xl font-bold text-center text-sage-900 bg-white outline-none focus:ring-2 focus:ring-sage-300 focus:border-sage-400 tracking-[0.6em] transition-all"
+                  />
+                  <p className="text-dark-400 text-xs font-medium mt-2 text-center">Code expires in 10 minutes · Check spam if not received</p>
+                </div>
+                {error && <div className="p-3 bg-red-50 border border-red-200 rounded-xl"><p className="text-red-700 text-sm font-bold">{error}</p></div>}
+                <button type="submit" disabled={loading || otp.length !== 6}
+                  className="w-full py-3.5 bg-gradient-brand text-white font-bold rounded-xl hover:shadow-glow hover:scale-[1.01] transition-all duration-300 active:scale-95 disabled:opacity-70 flex items-center justify-center gap-2">
+                  {loading ? <><div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />Verifying...</> : <>Verify Code <ArrowRight className="w-4 h-4" /></>}
+                </button>
+              </form>
+            </>
+          )}
+
+          {/* STEP 3: New Password */}
+          {step === 3 && (
+            <>
+              <h2 className="font-display text-2xl font-bold text-sage-900 mb-1">Set New Password</h2>
+              <p className="text-dark-500 text-sm font-medium mb-6">Choose a strong new password for your account.</p>
+              <form onSubmit={onUpdatePassword} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-dark-600 uppercase tracking-wider mb-1.5">New Password</label>
+                  <div className="relative">
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-dark-400"><Lock className="w-4 h-4" /></div>
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      value={newPassword}
+                      onChange={e => onNewPasswordChange(e.target.value)}
+                      placeholder="Min 6 characters"
+                      required
+                      autoFocus
+                      className="w-full pl-10 pr-10 py-3 border border-sage-200 rounded-xl text-sm text-dark-800 bg-white outline-none focus:ring-2 focus:ring-sage-300 focus:border-sage-400 hover:border-sage-300 font-medium transition-all"
+                    />
+                    <button type="button" onClick={onToggleShowPassword}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-dark-400 hover:text-sage-700 transition-colors">
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+                {error && <div className="p-3 bg-red-50 border border-red-200 rounded-xl"><p className="text-red-700 text-sm font-bold">{error}</p></div>}
+                <button type="submit" disabled={loading}
+                  className="w-full py-3.5 bg-gradient-brand text-white font-bold rounded-xl hover:shadow-glow hover:scale-[1.01] transition-all duration-300 active:scale-95 disabled:opacity-70 flex items-center justify-center gap-2">
+                  {loading ? <><div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />Updating...</> : <>Update Password <CheckCircle2 className="w-4 h-4" /></>}
+                </button>
+              </form>
+            </>
+          )}
+
+        </div>
+      </div>
+    </div>
   );
 }
 

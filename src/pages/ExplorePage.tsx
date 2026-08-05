@@ -12,6 +12,7 @@ import { supabase } from '../lib/supabase';
 import type { Vendor } from '../lib/supabase';
 import { CATEGORIES } from '../lib/categories';
 import { dataCache } from '../lib/cache';
+import { MOCK_VENDORS } from '../lib/vendors';
 
 export default function ExplorePage() {
   const navigate = useNavigate();
@@ -30,15 +31,18 @@ export default function ExplorePage() {
     if (cached && cached.length > 0) {
       setVendors(cached);
       setLoading(false);
+    } else {
+      setVendors(MOCK_VENDORS.slice(0, 6));
+      setLoading(false);
     }
 
     dataCache
       .fetchWithCache('top_featured_vendors', async () => {
         const { data } = await supabase.from('vendors').select('*').order('rating', { ascending: false }).limit(6);
-        return data || [];
+        return (data && data.length > 0) ? data : MOCK_VENDORS.slice(0, 6);
       })
       .then((data) => {
-        setVendors(data ?? []);
+        setVendors((data && data.length > 0) ? data : MOCK_VENDORS.slice(0, 6));
         setLoading(false);
       });
   }, []);

@@ -4,44 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useInView } from '../hooks/useInView';
 import type { Vendor } from '../lib/supabase';
 
-const staticVendors = [
-  {
-    id: '1', slug: 'the-grand-pavilion', name: 'The Grand Pavilion', category: 'Venue',
-    rating: 4.9, reviews: 324, location: 'Bandra, Mumbai', price_amount: 120000, price_label: 'per event', price_unit: '₹',
-    image: '', badge: 'Top Rated', badge_color: 'bg-sage-600', tags: ['Air Conditioned', '500 Guests', 'Parking'], verified: true,
-    gallery: [], description: '', capacity: null, experience_years: null, created_at: ''
-  },
-  {
-    id: '2', slug: 'spice-garden-catering', name: 'Spice Garden Catering', category: 'Catering',
-    rating: 4.8, reviews: 512, location: 'Koramangala, Bangalore', price_amount: 850, price_label: 'per plate', price_unit: '₹',
-    image: '', badge: 'Trending', badge_color: 'bg-cream-600', tags: ['Veg & Non-Veg', 'Live Counters', 'Home Style'], verified: true,
-    gallery: [], description: '', capacity: null, experience_years: null, created_at: ''
-  },
-  {
-    id: '3', slug: 'frame-focus-studio', name: 'Frame & Focus Studio', category: 'Photography',
-    rating: 4.9, reviews: 289, location: 'Hauz Khas, Delhi', price_amount: 45000, price_label: 'per day', price_unit: '₹',
-    image: '', badge: 'Premium', badge_color: 'bg-dark-800', tags: ['Candid', 'Cinematic Video', 'Drone'], verified: true,
-    gallery: [], description: '', capacity: null, experience_years: null, created_at: ''
-  },
-  {
-    id: '4', slug: 'blossom-decor-studio', name: 'Blossom Decor Studio', category: 'Decoration',
-    rating: 4.7, reviews: 403, location: 'Anna Nagar, Chennai', price_amount: 35000, price_label: 'onwards', price_unit: '₹',
-    image: '', badge: 'Popular', badge_color: 'bg-cream-600', tags: ['Floral Themes', 'LED Setup', 'Custom Designs'], verified: true,
-    gallery: [], description: '', capacity: null, experience_years: null, created_at: ''
-  },
-  {
-    id: '5', slug: 'rhythm-beats-dj', name: 'Rhythm & Beats DJ', category: 'Entertainment',
-    rating: 4.8, reviews: 178, location: 'Juhu, Mumbai', price_amount: 25000, price_label: 'per event', price_unit: '₹',
-    image: '', badge: 'New', badge_color: 'bg-sage-500', tags: ['Bollywood', 'International', 'Live Band'], verified: false,
-    gallery: [], description: '', capacity: null, experience_years: null, created_at: ''
-  },
-  {
-    id: '6', slug: 'event-canvas-pro', name: 'Event Canvas Pro', category: 'Coordinator',
-    rating: 5.0, reviews: 95, location: 'Powai, Mumbai', price_amount: 60000, price_label: 'per event', price_unit: '₹',
-    image: '', badge: 'Top Rated', badge_color: 'bg-sage-600', tags: ['Full Planning', 'On-site Management', 'Budget Tracking'], verified: true,
-    gallery: [], description: '', capacity: null, experience_years: null, created_at: ''
-  },
-] as Vendor[];
+import { MOCK_VENDORS } from '../lib/vendors';
 
 function VendorCard({ vendor, index, inView }: { vendor: Vendor; index: number; inView: boolean }) {
   const [liked, setLiked] = useState(false);
@@ -144,7 +107,7 @@ export default function FeaturedVendors() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {staticVendors.map((vendor, i) => (
+          {MOCK_VENDORS.slice(0, 6).map((vendor, i) => (
             <VendorCard key={vendor.id} vendor={vendor} index={i} inView={inView} />
           ))}
         </div>

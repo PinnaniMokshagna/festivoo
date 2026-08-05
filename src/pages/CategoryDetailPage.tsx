@@ -11,6 +11,7 @@ import { supabase } from '../lib/supabase';
 import type { Vendor } from '../lib/supabase';
 import { getCategory, CATEGORIES } from '../lib/categories';
 import { dataCache } from '../lib/cache';
+import { MOCK_VENDORS } from '../lib/vendors';
 
 export default function CategoryDetailPage() {
   const { category } = useParams<{ category: string }>();
@@ -28,14 +29,14 @@ export default function CategoryDetailPage() {
   useEffect(() => {
     if (!cat) { navigate('/explore'); return; }
 
-    // Try to serve instantly from the already-cached all_vendors list
     const allCached = dataCache.get<Vendor[]>('all_vendors');
-    if (allCached && allCached.length > 0) {
-      setVendors(allCached.filter((v) => v.category === cat.label).sort((a, b) => b.rating - a.rating));
-      setLoading(false);
-    }
+    const matchingCached = (allCached && allCached.length > 0)
+      ? allCached.filter((v) => v.category === cat.label)
+      : MOCK_VENDORS.filter((v) => v.category === cat.label);
 
-    // Always refresh from DB in background (keeps data fresh)
+    setVendors(matchingCached.length > 0 ? matchingCached : MOCK_VENDORS);
+    setLoading(false);
+
     dataCache
       .fetchWithCache(`category_${cat.label}`, async () => {
         const { data } = await supabase
@@ -43,10 +44,11 @@ export default function CategoryDetailPage() {
           .select('*')
           .eq('category', cat.label)
           .order('rating', { ascending: false });
-        return data ?? [];
+        return (data && data.length > 0) ? data : MOCK_VENDORS.filter(v => v.category === cat.label);
       })
       .then((data) => {
-        setVendors(data);
+        const list = (data && data.length > 0) ? data : MOCK_VENDORS.filter(v => v.category === cat.label);
+        setVendors(list.length > 0 ? list : MOCK_VENDORS);
         setLoading(false);
       });
   }, [cat, navigate]);
