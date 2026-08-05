@@ -24,7 +24,7 @@ export default function Services() {
       {/* Background ambient lighting blur spots */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-sage-200/30 blur-[130px] rounded-full pointer-events-none" />
       
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
         <div className={`text-center mb-12 transition-all duration-700 ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
@@ -65,7 +65,7 @@ export default function Services() {
         </div>
 
         {/* Dynamic 3D Service Cards Grid (4 per row on desktop) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
           {filteredCategories.map((cat, i) => (
             <div
               key={cat.label}
