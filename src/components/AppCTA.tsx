@@ -48,12 +48,12 @@ export default function AppCTA() {
   );
 
   return (
-    <section className="py-12 bg-cream-50" ref={ref}>
+    <section className="py-12 bg-cream-50 overflow-hidden" ref={ref}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-[#FFF5F6] border border-[#FFE0E3] rounded-3xl p-8 md:p-12 shadow-sm flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden">
+        <div className="bg-[#FFF5F6] border border-[#FFE0E3] rounded-3xl pt-8 px-8 md:pt-12 md:px-12 pb-0 shadow-sm flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden">
           
           {/* Left Text and Store Buttons */}
-          <div className="flex-1 max-w-xl text-center md:text-left">
+          <div className="flex-1 max-w-xl text-center md:text-left pb-8 md:pb-12">
             <h2 className="font-sans text-3xl sm:text-4xl font-extrabold text-sage-950 mb-3 tracking-tight">
               Download the app now!
             </h2>
@@ -96,23 +96,29 @@ export default function AppCTA() {
             </div>
           </div>
 
-          {/* Right Phone Mockup with QR Code */}
-          <div className="relative flex-shrink-0 w-72 sm:w-80">
-            {/* Phone Frame */}
-            <div className="bg-sage-950 rounded-[2.5rem] p-3 shadow-2xl border-4 border-sage-900 relative">
-              {/* Phone Speaker Notch */}
-              <div className="w-20 h-4 bg-sage-900 rounded-b-xl mx-auto absolute top-3 left-1/2 -translate-x-1/2 z-20" />
-              
-              {/* Screen Content */}
-              <div className="bg-white rounded-[2rem] pt-12 pb-8 px-6 text-center shadow-inner">
-                <p className="text-sage-800 font-semibold text-sm mb-6 leading-snug px-2">
-                  Scan the QR code to download the app
-                </p>
+          {/* Right Phone Mockup with Scroll-Up Animation */}
+          <div className="relative flex-shrink-0 w-72 sm:w-80 self-end">
+            <div
+              className={`transition-all duration-1000 ease-out transform ${
+                inView ? 'translate-y-4 opacity-100' : 'translate-y-36 opacity-0'
+              }`}
+            >
+              {/* Phone Frame */}
+              <div className="bg-sage-950 rounded-t-[2.5rem] rounded-b-none p-3 pb-0 shadow-2xl border-4 border-b-0 border-sage-900 relative -mb-2">
+                {/* Phone Speaker Notch */}
+                <div className="w-20 h-4 bg-sage-900 rounded-b-xl mx-auto absolute top-3 left-1/2 -translate-x-1/2 z-20" />
                 
-                {/* QR Container Box */}
-                <div className="bg-[#FFF5F6] p-4 rounded-2xl border border-[#FFE0E3] shadow-sm max-w-[190px] mx-auto">
-                  <div className="w-full aspect-square rounded-xl overflow-hidden shadow-inner">
-                    {qrSvg}
+                {/* Screen Content */}
+                <div className="bg-white rounded-t-[2rem] rounded-b-none pt-12 pb-10 px-6 text-center shadow-inner">
+                  <p className="text-sage-800 font-semibold text-sm mb-6 leading-snug px-2">
+                    Scan the QR code to download the app
+                  </p>
+                  
+                  {/* QR Container Box */}
+                  <div className="bg-[#FFF5F6] p-4 rounded-2xl border border-[#FFE0E3] shadow-sm max-w-[190px] mx-auto">
+                    <div className="w-full aspect-square rounded-xl overflow-hidden shadow-inner">
+                      {qrSvg}
+                    </div>
                   </div>
                 </div>
               </div>
