@@ -98,18 +98,15 @@ export default function AppCTA() {
                 <div className="bg-black rounded-t-[2.7rem] rounded-b-none p-[6px] pb-0 relative overflow-hidden">
                   
                   {/* Screen Content Box */}
-                  <div className="bg-gradient-to-b from-white via-sage-50/40 to-sage-50 rounded-t-[2.4rem] rounded-b-none pt-12 pb-10 px-6 text-center shadow-inner relative overflow-hidden">
+                  <div className="bg-gradient-to-b from-white via-sage-50/50 to-sage-50/90 rounded-t-[2.4rem] rounded-b-none pt-14 pb-10 px-6 text-center relative overflow-hidden">
                     
                     {/* iPhone Dynamic Island */}
-                    <div className="w-24 h-7 bg-black rounded-full mx-auto absolute top-3 left-1/2 -translate-x-1/2 z-30 flex items-center justify-between px-2.5 shadow-md">
+                    <div className="w-24 h-7 bg-black rounded-full mx-auto absolute top-3 left-1/2 -translate-x-1/2 z-30 flex items-center justify-between px-2.5 shadow-sm">
                       <div className="w-3.5 h-3.5 rounded-full bg-[#0a0a0d] border border-white/10 flex items-center justify-center">
                         <div className="w-1.5 h-1.5 rounded-full bg-[#151930]" />
                       </div>
                       <div className="w-2.5 h-2.5 rounded-full bg-[#0d140f] border border-white/10" />
                     </div>
-
-                    {/* Subtle Glass Screen Glare Overlay */}
-                    <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-bl from-white/30 via-transparent to-transparent pointer-events-none z-10" />
 
                     <p className="text-sage-950 font-bold text-sm mb-5 leading-snug px-1 relative z-20">
                       Scan the QR code to download the app
