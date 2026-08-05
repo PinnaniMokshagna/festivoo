@@ -64,8 +64,8 @@ export default function Services() {
           </div>
         </div>
 
-        {/* Dynamic 3D Service Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Dynamic 3D Service Cards Grid (4 per row on desktop) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredCategories.map((cat, i) => (
             <div
               key={cat.label}
