@@ -71,35 +71,6 @@ export default function Hero() {
       <div className="absolute inset-0 bg-gradient-to-b from-sage-950/70 via-sage-900/50 to-sage-950/85" />
       <div className="absolute inset-0 bg-gradient-to-r from-sage-950/40 via-transparent to-transparent" />
 
-      {/* Floating info cards */}
-      <div className={`absolute top-32 right-8 md:right-20 glass rounded-2xl px-4 py-3 transition-all duration-700 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.8s' }}>
-        <div className="flex items-center gap-2">
-          <div className="flex -space-x-2">
-            {['1239291', '1516680', '1181686'].map(n => (
-              <div key={n} className="w-7 h-7 rounded-full border-2 border-white overflow-hidden">
-                <img src={`https://images.pexels.com/photos/${n}/pexels-photo-${n}.jpeg?auto=compress&cs=tinysrgb&w=50&h=50&dpr=1`} alt="" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
-              </div>
-            ))}
-          </div>
-          <div>
-            <p className="text-sage-900 text-xs font-bold">500+ Events</p>
-            <p className="text-sage-600 text-[10px]">This Month</p>
-          </div>
-        </div>
-      </div>
-
-      <div className={`absolute bottom-32 left-8 md:left-20 glass rounded-2xl px-4 py-3 transition-all duration-700 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '1s' }}>
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gold-100 flex items-center justify-center">
-            <Star className="w-5 h-5 text-gold-600 fill-gold-500" />
-          </div>
-          <div>
-            <p className="text-sage-900 text-sm font-bold">4.9 / 5.0</p>
-            <p className="text-sage-600 text-[10px]">12K+ Reviews</p>
-          </div>
-        </div>
-      </div>
-
       {/* Main content */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-20">
         <div
