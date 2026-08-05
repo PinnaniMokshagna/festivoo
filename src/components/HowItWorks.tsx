@@ -170,13 +170,13 @@ export default function HowItWorks() {
                 </div>
 
                 {/* iPhone OLED Screen Container - Light Sage Green Theme */}
-                <div className="bg-gradient-to-b from-white via-sage-50/50 to-cream-50 rounded-[2.6rem] pt-13 pb-6 px-5 h-[530px] flex flex-col justify-between overflow-hidden relative border border-sage-200 shadow-inner">
+                <div className="bg-gradient-to-b from-white via-sage-50/50 to-cream-50 rounded-[2.6rem] pt-14 pb-6 px-5 h-[530px] flex flex-col justify-between overflow-hidden relative border border-sage-200 shadow-inner">
                   
                   {/* Screen Glare Overlay */}
                   <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-bl from-white/40 via-transparent to-transparent pointer-events-none z-10" />
 
                   {/* Animated Screen Content (Swaps on step change) */}
-                  <div key={activeStep} className="animate-fade-in relative z-20 pt-2">
+                  <div key={activeStep} className="animate-fade-in relative z-20 pt-4">
                     
                     {/* Tag pill */}
                     <span className="inline-block bg-sage-600 text-white font-bold text-xs px-3 py-1 rounded-full mb-3 shadow-sm">
