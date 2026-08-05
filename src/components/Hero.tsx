@@ -151,28 +151,6 @@ export default function Hero() {
               Search Vendors
             </button>
           </div>
-
-          <div className="flex flex-wrap justify-center items-center gap-3 mt-6">
-            <button
-              onClick={() => navigate('/explore')}
-              className="flex items-center gap-2 px-6 py-3 glass text-sage-900 font-bold rounded-xl hover:bg-white hover:scale-105 transition-all duration-300 group"
-            >
-              <Sparkles className="w-4 h-4 text-gold-600" />
-              Explore Showcase
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </button>
-            <div className="flex flex-wrap justify-center gap-2">
-              {['Wedding', 'Corporate', 'Birthday', 'Anniversary'].map((tag) => (
-                <button
-                  key={tag}
-                  onClick={() => navigate(`/vendors?occasion=${tag}`)}
-                  className="text-white text-xs font-bold border border-white/30 rounded-full px-3 py-1.5 hover:bg-white/20 hover:border-white/50 transition-all duration-200"
-                >
-                  {tag}
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
 
