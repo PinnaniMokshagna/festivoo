@@ -5,45 +5,115 @@ export default function AppCTA() {
   const { ref, inView } = useInView();
   const navigate = useNavigate();
 
-  // Clean SVG QR code for Festivo app download
+  // Realistic, high-density SVG QR Code matrix for Festivo app download
   const qrSvg = (
-    <svg viewBox="0 0 200 200" className="w-full h-full text-sage-950">
-      <rect width="200" height="200" fill="#ffffff" rx="16" />
-      {/* Outer corner squares */}
-      <rect x="15" y="15" width="50" height="50" fill="#13201a" rx="8" />
-      <rect x="23" y="23" width="34" height="34" fill="#ffffff" rx="4" />
-      <rect x="31" y="31" width="18" height="18" fill="#5d8560" rx="3" />
+    <svg viewBox="0 0 230 230" className="w-full h-full text-sage-950 bg-white p-1 rounded-xl">
+      <rect width="230" height="230" fill="#ffffff" />
+      
+      {/* Finder Pattern Top-Left */}
+      <rect x="15" y="15" width="56" height="56" fill="#1b2e23" rx="6" />
+      <rect x="23" y="23" width="40" height="40" fill="#ffffff" rx="4" />
+      <rect x="31" y="31" width="24" height="24" fill="#3a5e3d" rx="2" />
 
-      <rect x="135" y="15" width="50" height="50" fill="#13201a" rx="8" />
-      <rect x="143" y="23" width="34" height="34" fill="#ffffff" rx="4" />
-      <rect x="151" y="31" width="18" height="18" fill="#5d8560" rx="3" />
+      {/* Finder Pattern Top-Right */}
+      <rect x="159" y="15" width="56" height="56" fill="#1b2e23" rx="6" />
+      <rect x="167" y="23" width="40" height="40" fill="#ffffff" rx="4" />
+      <rect x="175" y="31" width="24" height="24" fill="#3a5e3d" rx="2" />
 
-      <rect x="15" y="135" width="50" height="50" fill="#13201a" rx="8" />
-      <rect x="23" y="143" width="34" height="34" fill="#ffffff" rx="4" />
-      <rect x="31" y="151" width="18" height="18" fill="#5d8560" rx="3" />
+      {/* Finder Pattern Bottom-Left */}
+      <rect x="15" y="159" width="56" height="56" fill="#1b2e23" rx="6" />
+      <rect x="23" y="167" width="40" height="40" fill="#ffffff" rx="4" />
+      <rect x="31" y="175" width="24" height="24" fill="#3a5e3d" rx="2" />
 
-      {/* Decorative pattern blocks */}
-      <rect x="75" y="20" width="14" height="14" fill="#13201a" rx="2" />
-      <rect x="95" y="20" width="25" height="14" fill="#5d8560" rx="2" />
-      <rect x="75" y="40" width="45" height="14" fill="#13201a" rx="2" />
+      {/* Alignment Pattern Bottom-Right */}
+      <rect x="155" y="155" width="28" height="28" fill="#1b2e23" rx="4" />
+      <rect x="161" y="161" width="16" height="16" fill="#ffffff" rx="2" />
+      <rect x="165" y="165" width="8" height="8" fill="#3a5e3d" rx="1" />
 
-      <rect x="20" y="75" width="14" height="25" fill="#5d8560" rx="2" />
-      <rect x="40" y="75" width="25" height="14" fill="#13201a" rx="2" />
-      <rect x="20" y="105" width="45" height="14" fill="#13201a" rx="2" />
+      {/* Timing Patterns (Horiz & Vert dotted tracks) */}
+      {[79, 91, 103, 115, 127, 139, 151].map((pos) => (
+        <g key={pos}>
+          <rect x={pos} y="39" width="6" height="6" fill={pos % 24 === 0 ? "#3a5e3d" : "#1b2e23"} rx="1" />
+          <rect x="39" y={pos} width="6" height="6" fill={pos % 24 === 0 ? "#3a5e3d" : "#1b2e23"} rx="1" />
+        </g>
+      ))}
 
-      <rect x="80" y="70" width="40" height="40" fill="#13201a" rx="6" />
-      <rect x="90" y="80" width="20" height="20" fill="#ffffff" rx="3" />
+      {/* Realistic Data Matrix Module Blocks */}
+      {/* Top Row Blocks */}
+      <rect x="79" y="15" width="12" height="6" fill="#1b2e23" rx="1" />
+      <rect x="97" y="15" width="6" height="12" fill="#3a5e3d" rx="1" />
+      <rect x="109" y="15" width="18" height="6" fill="#1b2e23" rx="1" />
+      <rect x="133" y="15" width="18" height="12" fill="#1b2e23" rx="1" />
 
-      <rect x="135" y="75" width="20" height="20" fill="#5d8560" rx="3" />
-      <rect x="160" y="75" width="25" height="14" fill="#13201a" rx="2" />
-      <rect x="140" y="100" width="45" height="15" fill="#13201a" rx="2" />
+      <rect x="79" y="27" width="18" height="6" fill="#3a5e3d" rx="1" />
+      <rect x="103" y="27" width="12" height="12" fill="#1b2e23" rx="1" />
+      <rect x="121" y="27" width="6" height="18" fill="#3a5e3d" rx="1" />
 
-      <rect x="75" y="135" width="20" height="20" fill="#13201a" rx="3" />
-      <rect x="100" y="135" width="20" height="45" fill="#5d8560" rx="3" />
-      <rect x="75" y="160" width="20" height="20" fill="#5d8560" rx="3" />
-      <rect x="135" y="135" width="45" height="20" fill="#13201a" rx="3" />
-      <rect x="135" y="160" width="20" height="20" fill="#5d8560" rx="3" />
-      <rect x="160" y="160" width="20" height="20" fill="#13201a" rx="3" />
+      <rect x="79" y="51" width="6" height="18" fill="#1b2e23" rx="1" />
+      <rect x="91" y="51" width="18" height="6" fill="#3a5e3d" rx="1" />
+      <rect x="115" y="51" width="12" height="12" fill="#1b2e23" rx="1" />
+      <rect x="139" y="51" width="12" height="6" fill="#3a5e3d" rx="1" />
+
+      {/* Middle Matrix Data Blocks */}
+      <rect x="15" y="79" width="18" height="6" fill="#1b2e23" rx="1" />
+      <rect x="39" y="79" width="12" height="12" fill="#3a5e3d" rx="1" />
+      <rect x="57" y="79" width="14" height="6" fill="#1b2e23" rx="1" />
+      <rect x="79" y="79" width="12" height="18" fill="#3a5e3d" rx="1" />
+      <rect x="97" y="79" width="18" height="6" fill="#1b2e23" rx="1" />
+      <rect x="121" y="79" width="12" height="12" fill="#3a5e3d" rx="1" />
+      <rect x="139" y="79" width="18" height="6" fill="#1b2e23" rx="1" />
+      <rect x="163" y="79" width="12" height="18" fill="#3a5e3d" rx="1" />
+      <rect x="181" y="79" width="18" height="6" fill="#1b2e23" rx="1" />
+
+      <rect x="15" y="97" width="6" height="18" fill="#3a5e3d" rx="1" />
+      <rect x="27" y="97" width="18" height="6" fill="#1b2e23" rx="1" />
+      <rect x="51" y="97" width="6" height="18" fill="#3a5e3d" rx="1" />
+      <rect x="63" y="97" width="12" height="6" fill="#1b2e23" rx="1" />
+      <rect x="97" y="97" width="6" height="18" fill="#3a5e3d" rx="1" />
+      <rect x="109" y="97" width="18" height="12" fill="#1b2e23" rx="1" />
+      <rect x="133" y="97" width="6" height="18" fill="#3a5e3d" rx="1" />
+      <rect x="145" y="97" width="12" height="6" fill="#1b2e23" rx="1" />
+      <rect x="175" y="97" width="24" height="6" fill="#1b2e23" rx="1" />
+
+      <rect x="21" y="121" width="12" height="6" fill="#1b2e23" rx="1" />
+      <rect x="39" y="121" width="18" height="12" fill="#3a5e3d" rx="1" />
+      <rect x="63" y="121" width="6" height="18" fill="#1b2e23" rx="1" />
+      <rect x="79" y="121" width="18" height="6" fill="#3a5e3d" rx="1" />
+      <rect x="103" y="121" width="12" height="18" fill="#1b2e23" rx="1" />
+      <rect x="121" y="121" width="18" height="6" fill="#3a5e3d" rx="1" />
+      <rect x="145" y="121" width="12" height="12" fill="#1b2e23" rx="1" />
+      <rect x="163" y="121" width="18" height="6" fill="#3a5e3d" rx="1" />
+      <rect x="187" y="121" width="12" height="18" fill="#1b2e23" rx="1" />
+
+      <rect x="15" y="139" width="18" height="6" fill="#3a5e3d" rx="1" />
+      <rect x="45" y="139" width="12" height="6" fill="#1b2e23" rx="1" />
+      <rect x="79" y="139" width="6" height="18" fill="#1b2e23" rx="1" />
+      <rect x="91" y="139" width="18" height="6" fill="#3a5e3d" rx="1" />
+      <rect x="121" y="139" width="6" height="18" fill="#1b2e23" rx="1" />
+      <rect x="163" y="139" width="12" height="6" fill="#3a5e3d" rx="1" />
+
+      {/* Bottom Row Matrix Blocks */}
+      <rect x="79" y="163" width="18" height="6" fill="#1b2e23" rx="1" />
+      <rect x="103" y="163" width="6" height="18" fill="#3a5e3d" rx="1" />
+      <rect x="115" y="163" width="18" height="6" fill="#1b2e23" rx="1" />
+      <rect x="139" y="163" width="12" height="12" fill="#3a5e3d" rx="1" />
+      <rect x="193" y="163" width="12" height="18" fill="#1b2e23" rx="1" />
+
+      <rect x="79" y="181" width="12" height="12" fill="#3a5e3d" rx="1" />
+      <rect x="97" y="181" width="18" height="6" fill="#1b2e23" rx="1" />
+      <rect x="121" y="181" width="12" height="18" fill="#3a5e3d" rx="1" />
+      <rect x="139" y="181" width="18" height="6" fill="#1b2e23" rx="1" />
+      <rect x="163" y="187" width="24" height="12" fill="#1b2e23" rx="1" />
+
+      <rect x="79" y="199" width="18" height="6" fill="#1b2e23" rx="1" />
+      <rect x="103" y="199" width="12" height="6" fill="#3a5e3d" rx="1" />
+      <rect x="139" y="199" width="12" height="6" fill="#3a5e3d" rx="1" />
+      <rect x="193" y="199" width="12" height="6" fill="#1b2e23" rx="1" />
+
+      {/* Center Festivo Brand Logo Badge inside QR Code */}
+      <rect x="91" y="91" width="48" height="48" fill="#ffffff" rx="10" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.15))" />
+      <rect x="95" y="95" width="40" height="40" fill="#1b2e23" rx="8" />
+      <path d="M115 103 L118 111 L126 114 L118 117 L115 125 L112 117 L104 114 L112 111 Z" fill="#e5c07b" />
     </svg>
   );
 
