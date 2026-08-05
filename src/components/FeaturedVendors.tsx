@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Star, MapPin, Heart, CheckCircle2, ArrowRight, RotateCw, Sparkles, ShieldCheck, Check, Users, Award } from 'lucide-react';
+import { Star, MapPin, Heart, CheckCircle2, ArrowRight, RotateCw, Sparkles, ShieldCheck, Check, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useInView } from '../hooks/useInView';
 import type { Vendor } from '../lib/supabase';
@@ -28,35 +28,37 @@ function VendorFlipCard({
           isFlipped ? 'rotate-y-180' : ''
         }`}
       >
-        {/* ================= FRONT SIDE (Main Profile Card) ================= */}
-        <div className="absolute inset-0 w-full h-full backface-hidden bg-white rounded-3xl overflow-hidden border border-sage-200/90 shadow-md hover:shadow-2xl transition-all duration-300 flex flex-col justify-between">
+        {/* ================= FRONT SIDE (Services Full-Bleed 3D Card Style) ================= */}
+        <div className="absolute inset-0 w-full h-full backface-hidden bg-white rounded-3xl overflow-hidden border border-sage-200/90 shadow-md hover:shadow-[0_25px_60px_-15px_rgba(45,74,51,0.22)] transition-all duration-500 flex flex-col justify-between transform hover:-translate-y-2 hover:rotate-[0.5deg]">
           
-          {/* Top Cover Image Box */}
-          <div className="relative h-56 overflow-hidden flex-shrink-0 cursor-pointer" onClick={() => navigate(`/vendors/${vendor.slug}`)}>
+          {/* Top Full-Bleed Image Header Container */}
+          <div className="relative h-64 overflow-hidden flex-shrink-0 cursor-pointer" onClick={() => navigate(`/vendors/${vendor.slug}`)}>
             <img
               src={vendor.image}
               alt={vendor.name}
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-sage-950/70 via-sage-950/20 to-transparent" />
+            
+            {/* Dark Vignette Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-sage-950/90 via-sage-950/20 to-transparent opacity-85 group-hover:opacity-70 transition-opacity duration-300" />
 
             {/* Top Left Badge */}
             {vendor.badge && (
-              <div className="absolute top-3.5 left-3.5">
-                <span className="bg-sage-900 text-gold-300 text-xs font-extrabold px-3 py-1 rounded-full shadow-md border border-white/20">
+              <div className="absolute top-4 left-4">
+                <span className="bg-sage-900/90 backdrop-blur-md text-gold-300 text-xs font-extrabold px-3 py-1 rounded-full shadow-md border border-white/20">
                   {vendor.badge}
                 </span>
               </div>
             )}
 
-            {/* Top Right Flip & Heart Action Buttons */}
-            <div className="absolute top-3.5 right-3.5 flex items-center gap-2 z-20">
+            {/* Top Right Buttons: Flip & Like */}
+            <div className="absolute top-4 right-4 flex items-center gap-2 z-20">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   setIsFlipped(true);
                 }}
-                className="px-3 py-1.5 bg-white/90 backdrop-blur-md rounded-full text-sage-900 text-xs font-extrabold flex items-center gap-1 shadow-md hover:bg-white hover:scale-105 transition-all"
+                className="px-3.5 py-1.5 bg-white/95 backdrop-blur-md border border-white/40 rounded-full text-sage-950 text-xs font-extrabold flex items-center gap-1 shadow-md hover:bg-white hover:scale-105 transition-all"
                 title="Flip to view services & features"
               >
                 <RotateCw className="w-3.5 h-3.5 text-sage-700 animate-spin-slow" />
@@ -68,73 +70,75 @@ function VendorFlipCard({
                   e.stopPropagation();
                   setLiked(!liked);
                 }}
-                className="w-8 h-8 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center shadow-md hover:scale-110 transition-transform"
+                className="w-8.5 h-8.5 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center shadow-md hover:scale-110 transition-transform"
               >
                 <Heart className={`w-4 h-4 ${liked ? 'text-rose-500 fill-rose-500' : 'text-dark-400'}`} />
               </button>
             </div>
 
-            {/* Category tag */}
-            <div className="absolute bottom-3 left-3.5">
-              <span className="bg-white/20 backdrop-blur-md border border-white/30 text-white text-xs font-bold px-3 py-1 rounded-full">
-                {vendor.category}
+            {/* Price Badge floating top right (below buttons) */}
+            <div className="absolute top-15 right-4 bg-white/90 backdrop-blur-md border border-white/40 rounded-full px-3 py-1 shadow-sm">
+              <span className="text-sage-950 text-xs font-extrabold">
+                {vendor.price_unit}{vendor.price_amount.toLocaleString('en-IN')}
               </span>
+            </div>
+
+            {/* Vendor Name & Rating floating over bottom image vignette */}
+            <div className="absolute bottom-4 left-5 right-5">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="bg-white/20 backdrop-blur-md border border-white/30 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full">
+                  {vendor.category}
+                </span>
+                <div className="flex items-center gap-1 bg-amber-400/90 text-sage-950 px-2 py-0.5 rounded-full text-[11px] font-extrabold shadow-xs">
+                  <Star className="w-3 h-3 fill-sage-950 text-sage-950" />
+                  <span>{vendor.rating}</span>
+                </div>
+              </div>
+              <h3 className="font-display font-bold text-white text-2xl drop-shadow-md group-hover:text-gold-300 transition-colors duration-300 line-clamp-1">
+                {vendor.name}
+              </h3>
             </div>
           </div>
 
-          {/* Front Content */}
-          <div className="p-5 flex-1 flex flex-col justify-between bg-white">
+          {/* Card Content & Action Bar */}
+          <div className="p-6 pt-4 flex-1 flex flex-col justify-between bg-white">
             <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <h3
-                  onClick={() => navigate(`/vendors/${vendor.slug}`)}
-                  className="font-display font-bold text-sage-950 text-xl leading-snug cursor-pointer hover:text-sage-600 transition-colors line-clamp-1"
-                >
-                  {vendor.name}
-                </h3>
-                {vendor.verified && <ShieldCheck className="w-5 h-5 text-emerald-600 flex-shrink-0" />}
-              </div>
-
               <div className="flex items-center gap-1.5 text-sage-600 text-xs font-semibold mb-3">
                 <MapPin className="w-3.5 h-3.5 text-sage-500" />
                 <span>{vendor.location}</span>
-              </div>
-
-              <div className="flex items-center gap-2 mb-3">
-                <div className="flex items-center gap-1 bg-amber-50 px-2.5 py-0.5 rounded-lg border border-amber-200/60">
-                  <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
-                  <span className="text-amber-900 text-xs font-bold">{vendor.rating}</span>
-                </div>
-                <span className="text-dark-500 text-xs font-semibold">({vendor.reviews} reviews)</span>
+                <span className="text-dark-400">• ({vendor.reviews} reviews)</span>
               </div>
 
               <div className="flex flex-wrap gap-1.5 mb-4">
                 {vendor.tags.slice(0, 3).map((tag) => (
-                  <span key={tag} className="text-sage-800 text-xs bg-sage-50 px-2.5 py-1 rounded-lg border border-sage-100 font-medium">
+                  <span key={tag} className="text-sage-800 text-xs bg-sage-50 px-2.5 py-1 rounded-xl border border-sage-100 font-medium">
                     ✓ {tag}
                   </span>
                 ))}
               </div>
             </div>
 
-            {/* Action footer */}
-            <div className="flex items-center justify-between pt-3 border-t border-sage-100">
-              <div>
-                <p className="text-sage-950 font-extrabold text-lg leading-none">
-                  {vendor.price_unit}{vendor.price_amount.toLocaleString('en-IN')}
-                </p>
-                <p className="text-dark-400 text-xs mt-0.5 font-semibold">{vendor.price_label}</p>
-              </div>
+            {/* Action Footer */}
+            <div className="flex items-center justify-between pt-4 border-t border-sage-100">
+              <span className="inline-flex items-center gap-1 text-xs font-bold text-sage-700 group-hover:text-sage-900 transition-colors">
+                <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
+                Verified Vendor
+              </span>
 
-              <button
+              <div
                 onClick={() => navigate(`/vendors/${vendor.slug}`)}
-                className="flex items-center gap-1.5 px-5 py-2.5 bg-sage-900 hover:bg-sage-800 text-white text-xs font-bold rounded-xl shadow-md hover:scale-105 transition-all"
+                className="inline-flex items-center gap-1.5 text-xs font-extrabold text-sage-900 group-hover:text-sage-600 group-hover:translate-x-1 transition-all duration-300 cursor-pointer"
               >
                 <span>View Details</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
+                <div className="w-6 h-6 rounded-full bg-sage-100 group-hover:bg-sage-600 group-hover:text-white flex items-center justify-center transition-colors">
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </div>
+              </div>
             </div>
           </div>
+
+          {/* Bottom Accent Color Bar */}
+          <div className="h-1.5 w-full bg-gradient-to-r from-sage-600 via-gold-500 to-sage-700 opacity-80 group-hover:opacity-100 transition-opacity" />
         </div>
 
         {/* ================= BACK SIDE (Vendor Features & Services) ================= */}
@@ -149,7 +153,7 @@ function VendorFlipCard({
               </div>
               <button
                 onClick={() => setIsFlipped(false)}
-                className="px-3 py-1.5 bg-sage-800 hover:bg-sage-700 text-gold-300 border border-gold-500/30 rounded-full text-xs font-bold flex items-center gap-1 shadow-sm transition-all"
+                className="px-3.5 py-1.5 bg-sage-800 hover:bg-sage-700 text-gold-300 border border-gold-500/30 rounded-full text-xs font-bold flex items-center gap-1 shadow-sm transition-all"
               >
                 <RotateCw className="w-3 h-3 text-gold-400" />
                 <span>Front ↩</span>
@@ -167,7 +171,7 @@ function VendorFlipCard({
             <div className="space-y-2 mb-4">
               <h5 className="text-gold-400 text-xs font-bold uppercase tracking-wider mb-2">Key Services & Amenities</h5>
               {vendor.tags.slice(0, 4).map((tag) => (
-                <div key={tag} className="flex items-center gap-2 text-sage-100 text-xs font-medium bg-sage-900/80 p-2 rounded-xl border border-sage-800">
+                <div key={tag} className="flex items-center gap-2 text-sage-100 text-xs font-medium bg-sage-900/80 p-2.5 rounded-xl border border-sage-800">
                   <Check className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
                   <span className="line-clamp-1">{tag}</span>
                 </div>
@@ -175,7 +179,7 @@ function VendorFlipCard({
             </div>
 
             {/* Quick Metrics (Capacity & Experience) */}
-            <div className="grid grid-cols-2 gap-2 bg-sage-900/90 p-2.5 rounded-xl border border-sage-800 text-center">
+            <div className="grid grid-cols-2 gap-2 bg-sage-900/90 p-3 rounded-xl border border-sage-800 text-center">
               <div>
                 <span className="text-[10px] text-sage-400 font-bold block uppercase">Capacity</span>
                 <span className="text-xs font-bold text-white line-clamp-1">{vendor.capacity || 'Flexible'}</span>
@@ -260,5 +264,6 @@ export default function FeaturedVendors() {
     </section>
   );
 }
+
 
 
