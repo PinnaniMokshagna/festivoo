@@ -341,7 +341,7 @@ export default function CustomerDashboard() {
                       ) : (
                         <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-sage-100">
                           {booking.vendor && (
-                            <button onClick={() => navigate(`/vendors/${booking.vendor.slug}`)} className="text-xs font-bold text-sage-600 hover:underline flex items-center gap-1">
+                            <button onClick={() => navigate(`/vendors/${booking.vendor?.slug}`)} className="text-xs font-bold text-sage-600 hover:underline flex items-center gap-1">
                               View Vendor <ChevronRight className="w-3 h-3" />
                             </button>
                           )}

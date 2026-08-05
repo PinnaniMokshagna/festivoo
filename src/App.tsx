@@ -37,6 +37,7 @@ export default function App() {
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/about" element={<AboutPage />} />
             <Route path="/explore" element={<ExplorePage />} />
             <Route path="/vendors" element={<VendorsPage />} />
             <Route path="/vendors/:slug" element={<VendorDetailPage />} />

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, CalendarCheck, Handshake, PartyPopper, CheckCircle2, Star, Sparkles, MapPin } from 'lucide-react';
+import { Search, CalendarCheck, Handshake, PartyPopper, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useInView } from '../hooks/useInView';
 

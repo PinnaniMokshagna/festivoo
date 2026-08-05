@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Star, MapPin, Heart, CheckCircle2, ArrowRight, RotateCw, Sparkles, ShieldCheck, Check, ChevronRight } from 'lucide-react';
+import { Star, MapPin, Heart, ArrowRight, RotateCw, Sparkles, Check, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useInView } from '../hooks/useInView';
 import type { Vendor } from '../lib/supabase';

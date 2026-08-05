@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, MapPin, Calendar, ChevronDown, Star, Users, Award, Sparkles, ArrowRight } from 'lucide-react';
+import { Search, MapPin, Calendar, ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const slides = [
@@ -43,8 +43,6 @@ export default function Hero() {
     }, 5000);
     return () => clearInterval(interval);
   }, []);
-
-  const slide = slides[current];
 
   const handleSearch = () => {
     const params = new URLSearchParams();

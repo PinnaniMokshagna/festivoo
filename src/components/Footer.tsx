@@ -40,8 +40,6 @@ const socialIcons = [
   { icon: Youtube, label: 'YouTube' },
 ];
 
-const cities = ['Mumbai', 'Delhi', 'Bangalore', 'Hyderabad', 'Chennai', 'Pune', 'Kolkata', 'Ahmedabad', 'Jaipur', 'Kochi'];
-
 export default function Footer() {
   const navigate = useNavigate();
 
