@@ -46,7 +46,7 @@ export default function Services() {
           <div className="inline-flex p-1.5 rounded-2xl bg-sage-100/70 border border-sage-200/80 backdrop-blur-md shadow-inner gap-1">
             {[
               { id: 'all', label: 'All Services (14)' },
-              { id: 'popular', label: '🔥 Most Popular' },
+              { id: 'popular', label: 'Most Popular' },
               { id: 'essential', label: '✦ Event Essentials' },
             ].map((tab) => (
               <button
