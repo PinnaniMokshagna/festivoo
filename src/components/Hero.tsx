@@ -94,10 +94,6 @@ export default function Hero() {
           ))}
         </div>
 
-        <p className="text-white/90 text-lg md:text-xl max-w-2xl mx-auto mb-10 font-medium drop-shadow">
-          India's most trusted platform to discover, compare, and book top event vendors — all in one seamless experience.
-        </p>
-
         {/* Search bar */}
         <div
           className={`max-w-4xl mx-auto transition-all duration-700 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
