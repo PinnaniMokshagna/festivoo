@@ -21,20 +21,14 @@ const occasionLinks = [
 
 const staticLinks = {
   Company: [
-    { label: 'About Us', path: '/about' },
-    { label: 'How It Works', path: '/#how-it-works' },
+    { label: 'How It Works', path: '/explore' },
     { label: 'Explore', path: '/explore' },
-    { label: 'Blog', path: '/' },
     { label: 'Partner with Us', path: '/auth' },
-    { label: 'Investor Relations', path: '/' },
   ],
   Support: [
     { label: 'Help Center', path: '/' },
-    { label: 'Contact Us', path: '/about' },
     { label: 'Terms of Service', path: '/' },
     { label: 'Privacy Policy', path: '/' },
-    { label: 'Cancellation Policy', path: '/' },
-    { label: 'Cookie Policy', path: '/' },
   ],
 };
 
