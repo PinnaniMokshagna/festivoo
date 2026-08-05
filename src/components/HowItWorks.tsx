@@ -154,80 +154,80 @@ export default function HowItWorks() {
 
           {/* Right Column: Live Interactive iPhone Frame displaying step animation */}
           <div className="lg:col-span-5 flex justify-center">
-            <div className="relative w-72 sm:w-80">
+            <div className="relative w-80 sm:w-96">
               {/* Glow Aura */}
-              <div className="absolute inset-0 bg-sage-400/20 blur-[60px] rounded-full scale-90 translate-y-4" />
+              <div className="absolute inset-0 bg-sage-400/20 blur-[60px] rounded-full scale-95 translate-y-4" />
 
-              {/* iPhone 15 Pro Metallic Frame */}
-              <div className="relative bg-gradient-to-b from-[#2d3134] via-[#1a1c1e] to-[#0f1011] rounded-[3rem] p-[9px] shadow-[0_30px_90px_rgba(0,0,0,0.35)] border border-white/20">
+              {/* iPhone 15 Pro Metallic Frame (Titanium Frame) */}
+              <div className="relative bg-gradient-to-b from-[#2d3134] via-[#1a1c1e] to-[#0f1011] rounded-[3.2rem] p-[10px] shadow-[0_35px_100px_rgba(0,0,0,0.35)] border border-white/20">
                 
                 {/* Dynamic Island Notch */}
-                <div className="w-24 h-7 bg-black rounded-full mx-auto absolute top-3.5 left-1/2 -translate-x-1/2 z-30 flex items-center justify-between px-2.5 shadow-md">
+                <div className="w-26 h-7 bg-black rounded-full mx-auto absolute top-3.5 left-1/2 -translate-x-1/2 z-30 flex items-center justify-between px-3 shadow-md">
                   <div className="w-3.5 h-3.5 rounded-full bg-[#0a0a0d] border border-white/10 flex items-center justify-center">
                     <div className="w-1.5 h-1.5 rounded-full bg-[#151930]" />
                   </div>
                   <div className="w-2.5 h-2.5 rounded-full bg-[#0d140f] border border-white/10" />
                 </div>
 
-                {/* iPhone OLED Screen Container */}
-                <div className="bg-sage-950 rounded-[2.4rem] pt-12 pb-6 px-4 h-[490px] flex flex-col justify-between overflow-hidden relative border border-sage-800/80 shadow-inner">
+                {/* iPhone OLED Screen Container - Light Sage Green Theme */}
+                <div className="bg-gradient-to-b from-white via-sage-50/50 to-cream-50 rounded-[2.6rem] pt-13 pb-6 px-5 h-[530px] flex flex-col justify-between overflow-hidden relative border border-sage-200 shadow-inner">
                   
                   {/* Screen Glare Overlay */}
-                  <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-bl from-white/15 via-transparent to-transparent pointer-events-none z-10" />
+                  <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-bl from-white/40 via-transparent to-transparent pointer-events-none z-10" />
 
                   {/* Animated Screen Content (Swaps on step change) */}
-                  <div key={activeStep} className="animate-fade-in relative z-20">
+                  <div key={activeStep} className="animate-fade-in relative z-20 pt-2">
                     
                     {/* Tag pill */}
-                    <span className="inline-block bg-gold-500/20 text-gold-400 border border-gold-500/30 text-[10px] font-bold px-3 py-1 rounded-full mb-3">
+                    <span className="inline-block bg-sage-600 text-white font-bold text-xs px-3 py-1 rounded-full mb-3 shadow-sm">
                       {activeData.mockScreen.tag}
                     </span>
 
-                    <h4 className="text-white font-display text-lg font-bold leading-tight mb-1">
+                    <h4 className="text-sage-950 font-display text-2xl font-bold leading-tight mb-1">
                       {activeData.mockScreen.heading}
                     </h4>
-                    <p className="text-sage-300 text-xs font-medium mb-4">
+                    <p className="text-sage-700 text-xs font-semibold mb-5">
                       {activeData.mockScreen.sub}
                     </p>
 
                     {/* Filter Pills */}
-                    <div className="flex flex-wrap gap-1.5 mb-5">
+                    <div className="flex flex-wrap gap-2 mb-6">
                       {activeData.mockScreen.pills.map((pill) => (
-                        <span key={pill} className="bg-sage-800/90 text-sage-200 border border-sage-700/80 text-[10px] font-bold px-2.5 py-1 rounded-lg">
+                        <span key={pill} className="bg-white text-sage-900 border border-sage-200 text-xs font-bold px-3 py-1.5 rounded-xl shadow-xs">
                           ✓ {pill}
                         </span>
                       ))}
                     </div>
 
                     {/* Active Mock Card */}
-                    <div className="bg-gradient-to-br from-sage-900 to-sage-950 p-3.5 rounded-2xl border border-sage-700/80 shadow-lg">
+                    <div className="bg-white p-4 rounded-2xl border border-sage-200/90 shadow-md">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-bold text-white leading-tight">
+                        <span className="text-sm font-bold text-sage-950 leading-tight">
                           {activeData.mockScreen.card.title}
                         </span>
-                        <span className="bg-emerald-500/20 text-emerald-300 text-[9px] font-bold px-2 py-0.5 rounded-full">
+                        <span className="bg-sage-600 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">
                           {activeData.mockScreen.card.badge}
                         </span>
                       </div>
-                      <div className="flex items-center gap-1 text-[11px] text-gold-400 font-bold">
-                        <Star className="w-3 h-3 fill-gold-400" />
+                      <div className="flex items-center gap-1 text-xs text-amber-600 font-bold">
+                        <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
                         <span>{activeData.mockScreen.card.rating}</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Bottom Navigation Mock */}
-                  <div className="relative z-20 pt-4 border-t border-sage-800/80 flex justify-around">
+                  <div className="relative z-20 pt-4 border-t border-sage-200/80 flex justify-around">
                     {steps.map((s, idx) => (
                       <button
                         key={s.step}
                         onClick={() => setActiveStep(idx)}
                         className={`flex flex-col items-center gap-1 transition-all ${
-                          idx === activeStep ? 'scale-110 text-gold-400' : 'text-sage-500 opacity-60'
+                          idx === activeStep ? 'scale-110 text-sage-800' : 'text-sage-400 opacity-70'
                         }`}
                       >
-                        <s.icon className="w-4 h-4" />
-                        <span className="text-[9px] font-bold">{s.step}</span>
+                        <s.icon className={`w-5 h-5 ${idx === activeStep ? 'text-sage-700' : 'text-sage-400'}`} />
+                        <span className={`text-[10px] font-bold ${idx === activeStep ? 'text-sage-900' : 'text-sage-400'}`}>{s.step}</span>
                       </button>
                     ))}
                   </div>
