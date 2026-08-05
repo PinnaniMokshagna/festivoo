@@ -96,28 +96,54 @@ export default function AppCTA() {
             </div>
           </div>
 
-          {/* Right Phone Mockup with Scroll-Up Animation */}
-          <div className="relative flex-shrink-0 w-72 sm:w-80 self-end">
+          {/* Right Phone Mockup with Premium iPhone 15 Pro Titanium Frame */}
+          <div className="relative flex-shrink-0 w-72 sm:w-84 self-end">
             <div
-              className={`transition-all duration-1000 ease-out transform ${
-                inView ? 'translate-y-4 opacity-100' : 'translate-y-36 opacity-0'
+              className={`transition-all duration-1000 cubic-bezier(0.16, 1, 0.3, 1) transform ${
+                inView ? 'translate-y-2 opacity-100 scale-100' : 'translate-y-48 opacity-0 scale-95'
               }`}
             >
-              {/* Phone Frame */}
-              <div className="bg-sage-950 rounded-t-[2.5rem] rounded-b-none p-3 pb-0 shadow-2xl border-4 border-b-0 border-sage-900 relative -mb-2">
-                {/* Phone Speaker Notch */}
-                <div className="w-20 h-4 bg-sage-900 rounded-b-xl mx-auto absolute top-3 left-1/2 -translate-x-1/2 z-20" />
+              {/* Outer Metallic Chassis (Titanium Gray / Obsidian) */}
+              <div className="relative bg-gradient-to-b from-[#2d3134] via-[#1a1c1e] to-[#0f1011] rounded-t-[3.2rem] rounded-b-none p-[10px] pb-0 shadow-[0_-25px_60px_rgba(0,0,0,0.35)] border-t border-l border-r border-white/20 -mb-2">
                 
-                {/* Screen Content */}
-                <div className="bg-white rounded-t-[2rem] rounded-b-none pt-12 pb-10 px-6 text-center shadow-inner">
-                  <p className="text-sage-800 font-semibold text-sm mb-6 leading-snug px-2">
-                    Scan the QR code to download the app
-                  </p>
+                {/* Left Side Volume Buttons & Action Button */}
+                <div className="absolute -left-[14px] top-24 w-[4px] h-7 bg-[#2d3134] rounded-l-md border-l border-white/10" />
+                <div className="absolute -left-[14px] top-36 w-[4px] h-12 bg-[#2d3134] rounded-l-md border-l border-white/10" />
+                <div className="absolute -left-[14px] top-52 w-[4px] h-12 bg-[#2d3134] rounded-l-md border-l border-white/10" />
+
+                {/* Right Side Power Button */}
+                <div className="absolute -right-[14px] top-32 w-[4px] h-16 bg-[#2d3134] rounded-r-md border-r border-white/10" />
+
+                {/* Antenna Bands */}
+                <div className="absolute top-10 -left-[10px] w-[2px] h-3 bg-neutral-600/50" />
+                <div className="absolute top-10 -right-[10px] w-[2px] h-3 bg-neutral-600/50" />
+
+                {/* Inner Bezel (Ultra thin OLED border) */}
+                <div className="bg-black rounded-t-[2.7rem] rounded-b-none p-[6px] pb-0 relative overflow-hidden">
                   
-                  {/* QR Container Box */}
-                  <div className="bg-[#FFF5F6] p-4 rounded-2xl border border-[#FFE0E3] shadow-sm max-w-[190px] mx-auto">
-                    <div className="w-full aspect-square rounded-xl overflow-hidden shadow-inner">
-                      {qrSvg}
+                  {/* Screen Content Box */}
+                  <div className="bg-gradient-to-b from-white via-[#FAF7F7] to-[#FFF5F6] rounded-t-[2.4rem] rounded-b-none pt-12 pb-10 px-6 text-center shadow-inner relative overflow-hidden">
+                    
+                    {/* iPhone Dynamic Island */}
+                    <div className="w-24 h-7 bg-black rounded-full mx-auto absolute top-3 left-1/2 -translate-x-1/2 z-30 flex items-center justify-between px-2.5 shadow-md">
+                      <div className="w-3.5 h-3.5 rounded-full bg-[#0a0a0d] border border-white/10 flex items-center justify-center">
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#151930]" />
+                      </div>
+                      <div className="w-2.5 h-2.5 rounded-full bg-[#0d140f] border border-white/10" />
+                    </div>
+
+                    {/* Subtle Glass Screen Glare Overlay */}
+                    <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-bl from-white/30 via-transparent to-transparent pointer-events-none z-10" />
+
+                    <p className="text-sage-950 font-bold text-sm mb-5 leading-snug px-1 relative z-20">
+                      Scan the QR code to download the app
+                    </p>
+                    
+                    {/* Premium QR Container Box */}
+                    <div className="bg-white p-4 rounded-2xl border border-[#F0D5D8] shadow-card max-w-[195px] mx-auto relative z-20">
+                      <div className="w-full aspect-square rounded-xl overflow-hidden shadow-sm">
+                        {qrSvg}
+                      </div>
                     </div>
                   </div>
                 </div>
