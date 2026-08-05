@@ -72,23 +72,33 @@ export default function Hero() {
       <div className="absolute inset-0 bg-gradient-to-r from-sage-950/40 via-transparent to-transparent" />
 
       {/* Main content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-20">
-        <div className="relative mb-4 h-[180px] sm:h-[200px] md:h-[240px] lg:h-[280px] flex items-center justify-center overflow-hidden">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-24 pb-16">
+        
+        {/* Dynamic Animated Text Headline Box */}
+        <div className="relative mb-8 min-h-[220px] sm:min-h-[240px] md:min-h-[260px] flex items-center justify-center">
           {slides.map((s, i) => (
             <div
               key={i}
-              className="absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-1000"
-              style={{ opacity: i === current ? 1 : 0, pointerEvents: i === current ? 'auto' : 'none' }}
+              className="absolute inset-0 flex flex-col items-center justify-center transition-all duration-700 transform"
+              style={{
+                opacity: i === current ? 1 : 0,
+                transform: i === current ? 'translateY(0px) scale(1)' : 'translateY(12px) scale(0.98)',
+                pointerEvents: i === current ? 'auto' : 'none',
+              }}
             >
-              <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/30 rounded-full px-4 py-1.5 mb-4">
+              {/* Tag pill */}
+              <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-md border border-white/30 rounded-full px-4 py-1.5 mb-4 shadow-md">
                 <span className="w-2 h-2 rounded-full bg-gold-400 animate-pulse" />
-                <span className="text-white text-sm font-bold">{s.tag}</span>
+                <span className="text-white text-xs sm:text-sm font-bold uppercase tracking-wider">{s.tag}</span>
               </div>
-              <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white leading-tight drop-shadow-lg text-center">
-                {s.title}{' '}
-                <span className="text-gold-400">{s.highlight}</span>
-                <br />
-                <span className="text-white">{s.subtitle}</span>
+
+              {/* Perfectly Proportioned Responsive Title */}
+              <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.15] drop-shadow-xl text-center max-w-4xl mx-auto">
+                <span>{s.title}</span>{' '}
+                <span className="text-gradient-gold bg-clip-text text-transparent bg-gradient-to-r from-gold-300 via-amber-400 to-gold-500 inline-block">
+                  {s.highlight}
+                </span>{' '}
+                <span className="block mt-1 sm:mt-2 text-white">{s.subtitle}</span>
               </h1>
             </div>
           ))}
@@ -97,7 +107,7 @@ export default function Hero() {
         {/* Search bar */}
         <div
           className={`max-w-4xl mx-auto transition-all duration-700 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-          style={{ transitionDelay: '0.4s' }}
+          style={{ transitionDelay: '0.3s' }}
         >
           <div className="bg-white rounded-2xl shadow-card-hover p-2 flex flex-col md:flex-row gap-2">
             <div className="flex-1 relative">
