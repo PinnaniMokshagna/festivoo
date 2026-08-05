@@ -48,9 +48,9 @@ export default function AppCTA() {
   );
 
   return (
-    <section className="py-12 bg-cream-50 overflow-hidden" ref={ref}>
+    <section className="py-12 bg-white overflow-hidden" ref={ref}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-[#FFF5F6] border border-[#FFE0E3] rounded-3xl pt-8 px-8 md:pt-12 md:px-12 pb-0 shadow-sm flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden">
+        <div className="bg-sage-50/80 border border-sage-200 rounded-3xl pt-8 px-8 md:pt-12 md:px-12 pb-0 shadow-sm flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden">
           
           {/* Left Text and Store Buttons */}
           <div className="flex-1 max-w-xl text-center md:text-left pb-8 md:pb-12">
@@ -122,7 +122,7 @@ export default function AppCTA() {
                 <div className="bg-black rounded-t-[2.7rem] rounded-b-none p-[6px] pb-0 relative overflow-hidden">
                   
                   {/* Screen Content Box */}
-                  <div className="bg-gradient-to-b from-white via-[#FAF7F7] to-[#FFF5F6] rounded-t-[2.4rem] rounded-b-none pt-12 pb-10 px-6 text-center shadow-inner relative overflow-hidden">
+                  <div className="bg-gradient-to-b from-white via-sage-50/40 to-sage-50 rounded-t-[2.4rem] rounded-b-none pt-12 pb-10 px-6 text-center shadow-inner relative overflow-hidden">
                     
                     {/* iPhone Dynamic Island */}
                     <div className="w-24 h-7 bg-black rounded-full mx-auto absolute top-3 left-1/2 -translate-x-1/2 z-30 flex items-center justify-between px-2.5 shadow-md">
@@ -140,7 +140,7 @@ export default function AppCTA() {
                     </p>
                     
                     {/* Premium QR Container Box */}
-                    <div className="bg-white p-4 rounded-2xl border border-[#F0D5D8] shadow-card max-w-[195px] mx-auto relative z-20">
+                    <div className="bg-white p-4 rounded-2xl border border-sage-200 shadow-card max-w-[195px] mx-auto relative z-20">
                       <div className="w-full aspect-square rounded-xl overflow-hidden shadow-sm">
                         {qrSvg}
                       </div>
