@@ -213,7 +213,7 @@ export const CATEGORIES: CategoryDef[] = [
       'Mehendi cones for DIY application',
     ],
     startingPrice: '₹1,500',
-    image: 'https://images.unsplash.com/photo-1561088448-b4b10496d0bb?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=80',
   },
   {
     label: 'Flower Decor',
