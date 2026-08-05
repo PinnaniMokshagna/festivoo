@@ -19,12 +19,23 @@ export default function ExplorePage() {
   const [vendors, setVendors] = useState<Vendor[]>([]);
   const [loading, setLoading] = useState(true);
   const [hoveredCat, setHoveredCat] = useState<number | null>(null);
+  const [videoDimmed, setVideoDimmed] = useState(false);
+  const [showContent, setShowContent] = useState(false);
 
   const heroRef = useInView<HTMLDivElement>();
   const categoriesRef = useInView<HTMLDivElement>();
   const featuredRef = useInView<HTMLDivElement>();
   const howItWorksRef = useInView<HTMLDivElement>();
   const ctaRef = useInView<HTMLDivElement>();
+
+  useEffect(() => {
+    // Reveal text after initial video playback (~4.5s) or on completion
+    const timer = setTimeout(() => {
+      setVideoDimmed(true);
+      setShowContent(true);
+    }, 4000);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const cached = dataCache.get<Vendor[]>('top_featured_vendors');
@@ -51,21 +62,94 @@ export default function ExplorePage() {
     <>
       <Navbar />
       <div className="min-h-screen bg-cream-50/50 pt-16">
-        {/* Hero */}
-        <section ref={heroRef.ref} className="bg-gradient-to-br from-sage-900 to-sage-800 py-20 relative overflow-hidden">
-          <div className="orb w-96 h-96 bg-sage-600/20 -top-20 -left-20" />
-          <div className="orb w-72 h-72 bg-gold-500/10 bottom-0 right-10" style={{ animationDelay: '2s' }} />
-          <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-5">
-              <Sparkles className="w-4 h-4 text-gold-400" />
-              <span className="text-white text-sm font-bold">Explore Services</span>
+        {/* Cinematic Video Hero Section */}
+        <section ref={heroRef.ref} className="relative min-h-[560px] flex items-center justify-center overflow-hidden bg-sage-950 py-24">
+          
+          {/* Background Video player */}
+          <div className="absolute inset-0 z-0 overflow-hidden">
+            <video
+              autoPlay
+              muted
+              playsInline
+              loop
+              onEnded={() => {
+                setVideoDimmed(true);
+                setShowContent(true);
+              }}
+              onTimeUpdate={(e) => {
+                // If video reaches near completion, dim video and show text
+                const video = e.currentTarget;
+                if (video.currentTime >= 3.8 && !videoDimmed) {
+                  setVideoDimmed(true);
+                  setShowContent(true);
+                }
+              }}
+              className={`w-full h-full object-cover transition-all duration-1000 transform scale-105 ${
+                videoDimmed ? 'opacity-35 brightness-50 contrast-125 filter blur-[1px]' : 'opacity-100 brightness-105 contrast-105'
+              }`}
+            >
+              <source src="/explore-header-bg.mp4" type="video/mp4" />
+            </video>
+          </div>
+
+          {/* Dynamic Dark Gradient Backdrop Overlay */}
+          <div
+            className={`absolute inset-0 z-10 transition-opacity duration-1000 bg-gradient-to-b from-sage-950/70 via-sage-950/50 to-sage-950/90 pointer-events-none ${
+              videoDimmed ? 'opacity-100' : 'opacity-20'
+            }`}
+          />
+
+          {/* Cinematic Text Content Box (Reveals with spring animation after video highlight) */}
+          <div className="relative z-20 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            
+            {/* Top Pill */}
+            <div
+              className={`inline-flex items-center gap-2 bg-white/15 backdrop-blur-md border border-white/30 rounded-full px-5 py-2 mb-6 shadow-xl transition-all duration-700 ${
+                showContent ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'
+              }`}
+            >
+              <Sparkles className="w-4 h-4 text-gold-400 animate-pulse" />
+              <span className="text-white text-xs sm:text-sm font-extrabold uppercase tracking-widest">Explore Services</span>
             </div>
-            <h1 className={`font-display text-4xl md:text-5xl font-bold text-white mb-4 transition-all duration-700 ${heroRef.inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-              Discover Everything You Need <br /> for Your <span className="text-gradient-gold">Perfect Event</span>
+
+            {/* Headline */}
+            <h1
+              className={`font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white mb-6 leading-tight drop-shadow-2xl transition-all duration-1000 delay-150 ${
+                showContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
+              }`}
+            >
+              Discover Everything You Need <br /> for Your <span className="text-gradient-gold bg-clip-text text-transparent bg-gradient-to-r from-gold-300 via-amber-400 to-gold-500">Perfect Event</span>
             </h1>
-            <p className={`text-sage-200 text-lg max-w-2xl mx-auto font-medium transition-all duration-700 delay-200 ${heroRef.inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+
+            {/* Subtitle */}
+            <p
+              className={`text-sage-200 text-base sm:text-xl max-w-2xl mx-auto font-medium leading-relaxed drop-shadow-md transition-all duration-1000 delay-300 mb-8 ${
+                showContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              }`}
+            >
               From photographers to pandits, DJs to decorators — browse all 14 event service categories in one place.
             </p>
+
+            {/* Manual Replay Video Preview Button */}
+            <div
+              className={`transition-all duration-700 delay-500 ${
+                showContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+              }`}
+            >
+              <button
+                onClick={() => {
+                  setVideoDimmed(false);
+                  setShowContent(false);
+                  setTimeout(() => {
+                    setVideoDimmed(true);
+                    setShowContent(true);
+                  }, 4000);
+                }}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-black/40 hover:bg-black/70 border border-white/20 text-white/90 text-xs font-bold rounded-full backdrop-blur-md transition-all hover:scale-105"
+              >
+                <span>Replay Highlighting Video 🎬</span>
+              </button>
+            </div>
           </div>
         </section>
 
