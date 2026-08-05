@@ -106,7 +106,7 @@ export default function FeaturedVendors() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {MOCK_VENDORS.slice(0, 6).map((vendor, i) => (
             <VendorCard key={vendor.id} vendor={vendor} index={i} inView={inView} />
           ))}
