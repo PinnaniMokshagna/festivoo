@@ -48,6 +48,28 @@
       radial-gradient(circle at 20% 50%, rgba(70, 107, 72, 0.05) 0%, transparent 50%),
       radial-gradient(circle at 80% 80%, rgba(193, 147, 80, 0.04) 0%, transparent 50%);
   }
+
+  /* 3D Flip Card Utilities */
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+  .transform-style-3d {
+    transform-style: preserve-3d;
+  }
+  .backface-hidden {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+  @keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  .animate-spin-slow {
+    animation: spin-slow 12s linear infinite;
+  }
 }
 
 ::-webkit-scrollbar { width: 8px; }
