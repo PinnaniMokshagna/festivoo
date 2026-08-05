@@ -169,8 +169,8 @@ export default function HowItWorks() {
                   <div className="w-2.5 h-2.5 rounded-full bg-[#0d140f] border border-white/10" />
                 </div>
 
-                {/* iPhone OLED Screen Container - Light Sage Green Theme */}
-                <div className="bg-gradient-to-b from-white via-sage-50/50 to-cream-50 rounded-[2.6rem] pt-14 pb-6 px-5 h-[530px] flex flex-col justify-between overflow-hidden relative border border-sage-200">
+                {/* iPhone OLED Screen Container - Crisp Pure White Theme */}
+                <div className="bg-white rounded-[2.6rem] pt-14 pb-6 px-5 h-[530px] flex flex-col justify-between overflow-hidden relative border border-sage-200">
                   
                   {/* Animated Screen Content (Swaps on step change) */}
 
