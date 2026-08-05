@@ -73,18 +73,25 @@ export default function Hero() {
 
       {/* Main content */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-20">
-        <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/30 rounded-full px-4 py-1.5 mb-6">
-          <span className="w-2 h-2 rounded-full bg-gold-400 animate-pulse" />
-          <span className="text-white text-sm font-bold transition-all duration-500">{slide.tag}</span>
-        </div>
-
-        <div className="mb-4 min-h-[160px] sm:min-h-[180px] md:min-h-[210px] lg:min-h-[250px] flex items-center justify-center">
-          <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white leading-tight drop-shadow-lg transition-all duration-500">
-            {slide.title}{' '}
-            <span className="text-gold-400">{slide.highlight}</span>
-            <br />
-            <span className="text-white">{slide.subtitle}</span>
-          </h1>
+        <div className="relative mb-4 h-[180px] sm:h-[200px] md:h-[240px] lg:h-[280px] flex items-center justify-center overflow-hidden">
+          {slides.map((s, i) => (
+            <div
+              key={i}
+              className="absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-1000"
+              style={{ opacity: i === current ? 1 : 0, pointerEvents: i === current ? 'auto' : 'none' }}
+            >
+              <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/30 rounded-full px-4 py-1.5 mb-4">
+                <span className="w-2 h-2 rounded-full bg-gold-400 animate-pulse" />
+                <span className="text-white text-sm font-bold">{s.tag}</span>
+              </div>
+              <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white leading-tight drop-shadow-lg text-center">
+                {s.title}{' '}
+                <span className="text-gold-400">{s.highlight}</span>
+                <br />
+                <span className="text-white">{s.subtitle}</span>
+              </h1>
+            </div>
+          ))}
         </div>
 
         <p className="text-white/90 text-lg md:text-xl max-w-2xl mx-auto mb-10 font-medium drop-shadow">
