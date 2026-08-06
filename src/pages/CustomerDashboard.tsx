@@ -2,14 +2,15 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Calendar, Star, TrendingUp, Clock, CheckCircle2, XCircle,
-  Download, ArrowRight, Sparkles, Heart, Wallet, Bell,
-  ChevronRight, MapPin, Users, Mail, Phone, FileText, LogOut,
+  ArrowRight, Sparkles, Heart, Wallet,
+  ChevronRight, MapPin, Users, FileText,
   MessageSquare, PhoneCall, Send, X
 } from 'lucide-react';
 import { useAuth } from '../lib/auth';
 import { supabase } from '../lib/supabase';
 import type { Booking, Vendor } from '../lib/supabase';
 import Navbar from '../components/Navbar';
+import PaymentsTab from '../components/PaymentsTab';
 import { useInView } from '../hooks/useInView';
 
 type BookingWithVendor = Booking & { vendor?: Vendor };
@@ -140,12 +141,12 @@ export default function CustomerDashboard() {
   const { user, profile, signOut } = useAuth();
   const [bookings, setBookings] = useState<BookingWithVendor[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'overview' | 'bookings' | 'saved' | 'invoices'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'bookings' | 'saved' | 'invoices' | 'payments'>('overview');
 
   useEffect(() => {
     const tabParam = searchParams.get('tab');
-    if (tabParam && ['overview', 'bookings', 'saved', 'invoices'].includes(tabParam)) {
-      setActiveTab(tabParam as 'overview' | 'bookings' | 'saved' | 'invoices');
+    if (tabParam && ['overview', 'bookings', 'saved', 'invoices', 'payments'].includes(tabParam)) {
+      setActiveTab(tabParam as 'overview' | 'bookings' | 'saved' | 'invoices' | 'payments');
     }
   }, [searchParams]);
   const [reviewingBooking, setReviewingBooking] = useState<string | null>(null);
@@ -278,42 +279,26 @@ export default function CustomerDashboard() {
         {/* Header Banner */}
         <div className="bg-[#243e2b] py-8 relative overflow-hidden text-white">
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <div className="w-16 h-16 bg-[#3b5942] rounded-2xl flex items-center justify-center shadow-sm flex-shrink-0">
-                  <Sparkles className="w-8 h-8 text-white" />
-                </div>
-                <div>
-                  <h1 className="font-display text-3xl font-bold text-white tracking-wide">
-                    {profile?.full_name || user?.email?.split('@')[0] || 'User'}!
-                  </h1>
-                  <div className="flex items-center gap-3 mt-1.5">
-                    <span className="bg-[#47654e] text-white text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1">
-                      <Star className="w-3 h-3 text-gold-400 fill-gold-400" /> Customer
-                    </span>
-                    <span className="text-sage-200/90 text-sm font-medium">{user?.email}</span>
-                  </div>
-                </div>
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 bg-[#3b5942] rounded-2xl flex items-center justify-center shadow-sm flex-shrink-0">
+                <Sparkles className="w-8 h-8 text-white" />
               </div>
-              <div className="flex items-center gap-3">
-                <button className="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-xl flex items-center justify-center text-white transition-colors relative">
-                  <Bell className="w-4.5 h-4.5 text-gold-400" />
-                  <span className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-gold-500 text-dark-900 font-extrabold text-[10px] rounded-full flex items-center justify-center border-2 border-[#243e2b]">
-                    {upcomingBookings.length || 3}
+              <div>
+                <h1 className="font-display text-3xl font-bold text-white tracking-wide">
+                  {profile?.full_name || user?.email?.split('@')[0] || 'User'}!
+                </h1>
+                <div className="flex items-center gap-3 mt-1.5">
+                  <span className="bg-[#47654e] text-white text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1">
+                    <Star className="w-3 h-3 text-gold-400 fill-gold-400" /> Customer
                   </span>
-                </button>
-                <button
-                  onClick={async () => { await signOut(); navigate('/'); }}
-                  className="flex items-center gap-2 px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl text-sm font-bold transition-all border border-white/10"
-                >
-                  <LogOut className="w-4 h-4" /> Sign Out
-                </button>
+                  <span className="text-sage-200/90 text-sm font-medium">{user?.email}</span>
+                </div>
               </div>
             </div>
 
             {/* Tabs */}
             <div className="flex gap-2 mt-8 overflow-x-auto">
-              {(['overview', 'bookings', 'saved', 'invoices'] as const).map(tab => (
+              {(['overview', 'bookings', 'saved', 'payments'] as const).map(tab => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
@@ -323,7 +308,7 @@ export default function CustomerDashboard() {
                       : 'text-white/80 hover:text-white hover:bg-white/10'
                   }`}
                 >
-                  {tab}
+                  {tab === 'payments' ? 'Invoices & Payments' : tab}
                 </button>
               ))}
             </div>
@@ -628,48 +613,15 @@ export default function CustomerDashboard() {
             </div>
           )}
 
-          {/* Invoices */}
-          {activeTab === 'invoices' && (
-            <div className="bg-white rounded-2xl shadow-card p-6">
-              <h2 className="font-display text-xl font-bold text-sage-900 mb-6 flex items-center gap-2">
-                <FileText className="w-5 h-5 text-sage-500" /> Invoices & Receipts
-              </h2>
-              {bookings.filter(b => b.payment_status === 'paid').length === 0 ? (
-                <div className="text-center py-16">
-                  <FileText className="w-12 h-12 text-sage-300 mx-auto mb-4" />
-                  <p className="font-bold text-sage-900 mb-1">No invoices yet</p>
-                  <p className="text-dark-500 text-sm">Paid bookings will generate invoices here.</p>
-                </div>
-              ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b border-sage-100">
-                        {['Ref', 'Vendor', 'Date', 'Amount', 'Status', 'Action'].map(h => (
-                          <th key={h} className="pb-3 text-left text-dark-500 text-xs font-bold uppercase tracking-wider pr-4">{h}</th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-sage-50">
-                      {bookings.filter(b => b.payment_status === 'paid').map(b => (
-                        <tr key={b.id} className="hover:bg-sage-50/50 transition-colors">
-                          <td className="py-4 pr-4 font-mono text-xs text-dark-500">{b.booking_ref}</td>
-                          <td className="py-4 pr-4 font-bold text-sage-900 text-sm">{b.vendor?.name ?? '—'}</td>
-                          <td className="py-4 pr-4 text-sm text-dark-700">{new Date(b.event_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
-                          <td className="py-4 pr-4 font-bold text-sage-900 text-sm">₹{b.total_amount.toLocaleString('en-IN')}</td>
-                          <td className="py-4"><span className="flex items-center gap-1 text-xs font-bold text-sage-700 bg-sage-100 px-2 py-1 rounded-full"><CheckCircle2 className="w-3 h-3" /> Paid</span></td>
-                          <td className="py-4">
-                            <button onClick={() => navigate(`/confirmation/${b.booking_ref}`)} className="text-sage-600 hover:text-sage-700">
-                              <Download className="w-4 h-4" />
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </div>
+          {/* Invoices & Payments */}
+          {(activeTab === 'invoices' || activeTab === 'payments') && (
+            <PaymentsTab
+              bookings={bookings}
+              setBookings={setBookings}
+              userEmail={user?.email}
+              userName={user?.user_metadata?.full_name}
+              navigate={navigate}
+            />
           )}
         </div>
       </div>

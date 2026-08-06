@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowRight, Sparkles, Star, ChevronRight } from 'lucide-react';
+import { Sparkles, Star, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useInView } from '../hooks/useInView';
 import { CATEGORIES } from '../lib/categories';
@@ -20,7 +20,7 @@ export default function Services() {
   });
 
   return (
-    <section id="services" className="py-28 bg-gradient-to-b from-white via-sage-50/40 to-white relative overflow-hidden" ref={ref}>
+    <section id="services" className="pt-20 pb-4 bg-gradient-to-b from-white via-sage-50/40 to-white relative overflow-hidden" ref={ref}>
       {/* Background ambient lighting blur spots */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-sage-200/30 blur-[130px] rounded-full pointer-events-none" />
       
@@ -133,31 +133,6 @@ export default function Services() {
               <div className={`h-1.5 w-full bg-gradient-to-r ${cat.gradient} opacity-80 group-hover:opacity-100 transition-opacity`} />
             </div>
           ))}
-        </div>
-
-        {/* Bottom CTA Banner */}
-        <div className={`mt-20 p-8 sm:p-12 rounded-3xl bg-gradient-to-r from-sage-900 via-sage-950 to-sage-900 text-white relative overflow-hidden shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8 transition-all duration-700 ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <div className="absolute top-0 right-0 w-96 h-96 bg-sage-500/10 blur-3xl rounded-full pointer-events-none" />
-
-          <div className="relative z-10 max-w-xl text-center md:text-left">
-            <span className="text-gold-400 text-xs font-bold tracking-widest uppercase mb-2 block">Need custom recommendations?</span>
-            <h3 className="font-display text-3xl sm:text-4xl font-bold mb-3 leading-tight">
-              Ready to plan your dream event?
-            </h3>
-            <p className="text-sage-200 text-sm font-medium">
-              Explore all 2,500+ verified venues, photographers, caterers, and decorators tailored to your city.
-            </p>
-          </div>
-
-          <div className="relative z-10 flex-shrink-0">
-            <button
-              onClick={() => navigate('/explore')}
-              className="px-8 py-4 bg-gradient-to-r from-gold-500 to-amber-600 hover:from-gold-400 hover:to-amber-500 text-sage-950 font-extrabold text-base rounded-2xl shadow-lg hover:shadow-gold-500/30 hover:scale-105 transition-all duration-300 flex items-center gap-2 active:scale-95"
-            >
-              <span>Explore All Services</span>
-              <ArrowRight className="w-5 h-5" />
-            </button>
-          </div>
         </div>
 
       </div>

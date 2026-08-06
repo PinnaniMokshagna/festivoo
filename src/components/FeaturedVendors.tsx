@@ -20,16 +20,23 @@ function VendorFlipCard({
 
   return (
     <div
-      className={`animate-on-scroll ${inView ? 'in-view' : ''} delay-${Math.min((index + 1) * 100, 600)} group perspective-1000 h-[490px]`}
+      className={`animate-on-scroll ${inView ? 'in-view' : ''} delay-${Math.min((index + 1) * 100, 600)} group h-[490px]`}
+      style={{ perspective: '1000px' }}
     >
       {/* 3D Flip Container */}
       <div
-        className={`relative w-full h-full duration-700 transition-transform transform-style-3d ${
-          isFlipped ? 'rotate-y-180' : ''
-        }`}
+        className="relative w-full h-full"
+        style={{
+          transformStyle: 'preserve-3d',
+          transition: 'transform 0.7s cubic-bezier(0.4, 0, 0.2, 1)',
+          transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)'
+        }}
       >
         {/* ================= FRONT SIDE (Services Full-Bleed 3D Card Style) ================= */}
-        <div className="absolute inset-0 w-full h-full backface-hidden bg-white rounded-3xl overflow-hidden border border-sage-200/90 shadow-md hover:shadow-[0_25px_60px_-15px_rgba(45,74,51,0.22)] transition-all duration-500 flex flex-col justify-between transform hover:-translate-y-2 hover:rotate-[0.5deg]">
+        <div
+          className="absolute inset-0 w-full h-full bg-white rounded-3xl overflow-hidden border border-sage-200/90 shadow-md hover:shadow-[0_25px_60px_-15px_rgba(45,74,51,0.22)] transition-all duration-500 flex flex-col justify-between"
+          style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
+        >
           
           {/* Top Full-Bleed Image Header Container */}
           <div className="relative h-64 overflow-hidden flex-shrink-0 cursor-pointer" onClick={() => navigate(`/vendors/${vendor.slug}`)}>
@@ -51,18 +58,18 @@ function VendorFlipCard({
               </div>
             )}
 
-            {/* Top Right Buttons: Flip & Like */}
+            {/* Top Right Buttons: Flip Card & Like */}
             <div className="absolute top-4 right-4 flex items-center gap-2 z-20">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   setIsFlipped(true);
                 }}
-                className="px-3.5 py-1.5 bg-white/95 backdrop-blur-md border border-white/40 rounded-full text-sage-950 text-xs font-extrabold flex items-center gap-1 shadow-md hover:bg-white hover:scale-105 transition-all"
-                title="Flip to view services & features"
+                className="px-3 py-1.5 bg-white/95 backdrop-blur-md border border-white/40 rounded-full text-sage-950 text-xs font-extrabold flex items-center gap-1.5 shadow-md hover:bg-white hover:scale-105 transition-all"
+                title="Click to flip card & view details"
               >
-                <RotateCw className="w-3.5 h-3.5 text-sage-700 animate-spin-slow" />
-                <span>Features 🔄</span>
+                <RotateCw className="w-3.5 h-3.5 text-sage-700" />
+                <span>Flip Card 🔄</span>
               </button>
 
               <button
@@ -142,7 +149,10 @@ function VendorFlipCard({
         </div>
 
         {/* ================= BACK SIDE (Vendor Features & Services) ================= */}
-        <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180 bg-gradient-to-b from-sage-950 via-sage-900 to-sage-950 text-white rounded-3xl p-6 border border-sage-700 shadow-2xl flex flex-col justify-between">
+        <div
+          className="absolute inset-0 w-full h-full bg-gradient-to-b from-sage-950 via-sage-900 to-sage-950 text-white rounded-3xl p-6 border border-sage-700 shadow-2xl flex flex-col justify-between"
+          style={{ transform: 'rotateY(180deg)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
+        >
           
           <div>
             {/* Header: Title & Flip Back */}
@@ -220,7 +230,7 @@ export default function FeaturedVendors() {
   const navigate = useNavigate();
 
   return (
-    <section id="vendors" className="py-24 bg-white relative overflow-hidden" ref={ref}>
+    <section id="vendors" className="pt-8 pb-20 bg-white relative overflow-hidden" ref={ref}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
@@ -236,9 +246,6 @@ export default function FeaturedVendors() {
           </div>
 
           <div className="flex items-center gap-3">
-            <p className="text-dark-500 text-xs sm:text-sm font-semibold">
-              🔄 Click <span className="text-sage-900 font-bold">"Features 🔄"</span> to inspect vendor details
-            </p>
             <button
               onClick={() => navigate('/vendors')}
               className="text-sage-700 font-extrabold text-sm border-b-2 border-sage-300 hover:border-sage-700 hover:text-sage-950 transition-colors pb-0.5"

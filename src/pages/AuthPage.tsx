@@ -25,15 +25,39 @@ const CUSTOMER_FEATURES = [
 ];
 
 const vendorSlides = [
-  { image: '', tag: 'For Vendors', title: 'Grow Your\nBusiness' },
-  { image: '', tag: 'Showcase', title: 'Your Work,\nAmplified' },
-  { image: '', tag: 'Connect', title: 'Reach More\nCustomers' },
+  {
+    image: 'https://images.pexels.com/photos/1444442/pexels-photo-1444442.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    tag: 'For Vendors',
+    title: 'Grow Your\nBusiness'
+  },
+  {
+    image: 'https://images.pexels.com/photos/2291367/pexels-photo-2291367.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    tag: 'Showcase',
+    title: 'Your Work,\nAmplified'
+  },
+  {
+    image: 'https://images.pexels.com/photos/169198/pexels-photo-169198.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    tag: 'Connect',
+    title: 'Reach More\nCustomers'
+  },
 ];
 
 const customerSlides = [
-  { image: '', tag: 'For Customers', title: 'Plan Perfect\nEvents' },
-  { image: '', tag: 'Discover', title: 'Find The Best\nVendors' },
-  { image: '', tag: 'Celebrate', title: 'Every Moment\nMatters' },
+  {
+    image: 'https://images.pexels.com/photos/3171837/pexels-photo-3171837.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    tag: 'For Customers',
+    title: 'Plan Perfect\nEvents'
+  },
+  {
+    image: 'https://images.pexels.com/photos/2306281/pexels-photo-2306281.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    tag: 'Discover',
+    title: 'Find The Best\nVendors'
+  },
+  {
+    image: 'https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    tag: 'Celebrate',
+    title: 'Every Moment\nMatters'
+  },
 ];
 
 /* ── Main Component ─────────────────────────────────────────────── */
@@ -83,13 +107,12 @@ export default function AuthPage() {
     e.preventDefault();
     setError('');
 
-    if (confirmPassword && password !== confirmPassword) {
-      return setError('Passwords do not match. Please check and try again.');
-    }
-
     if (mode === 'signup') {
       if (!name.trim()) return setError('Please enter your full name');
       if (password.length < 6) return setError('Password must be at least 6 characters');
+      if (confirmPassword && password !== confirmPassword) {
+        return setError('Passwords do not match. Please check and try again.');
+      }
     }
 
     setLoading(true);
@@ -265,13 +288,17 @@ export default function AuthPage() {
             <div className="space-y-3">
               <div className="flex items-center gap-3">
                 <div className="flex -space-x-2">
-                  {['1239291', '1516680', '1181686', '1024993'].map(n => (
-                    <div key={n} className="w-8 h-8 rounded-full border-2 border-sage-900 overflow-hidden">
+                  {[
+                    'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150',
+                    'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=150',
+                    'https://images.pexels.com/photos/712513/pexels-photo-712513.jpeg?auto=compress&cs=tinysrgb&w=150',
+                    'https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=150'
+                  ].map((url, index) => (
+                    <div key={index} className="w-8 h-8 rounded-full border-2 border-sage-900 overflow-hidden shadow-sm">
                       <img
-                        src={''}
-                        alt=""
+                        src={url}
+                        alt="Avatar"
                         className="w-full h-full object-cover"
-                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                       />
                     </div>
                   ))}
@@ -403,19 +430,21 @@ export default function AuthPage() {
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-dark-700 font-bold text-sm mb-1.5">Mobile Number</label>
-                  <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-dark-400" />
-                    <input
-                      type="tel"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="+91 98765 43210"
-                      className="w-full pl-10 pr-4 py-3 border border-sage-200 rounded-xl text-sm text-dark-800 bg-white outline-none transition-all focus:ring-2 focus:ring-sage-300 focus:border-sage-400 hover:border-sage-300 font-medium"
-                    />
+                {mode === 'signup' && (
+                  <div>
+                    <label className="block text-dark-700 font-bold text-sm mb-1.5">Mobile Number</label>
+                    <div className="relative">
+                      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-dark-400" />
+                      <input
+                        type="tel"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        placeholder="+91 98765 43210"
+                        className="w-full pl-10 pr-4 py-3 border border-sage-200 rounded-xl text-sm text-dark-800 bg-white outline-none transition-all focus:ring-2 focus:ring-sage-300 focus:border-sage-400 hover:border-sage-300 font-medium"
+                      />
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <div>
                   <label className="block text-dark-700 font-bold text-sm mb-1.5">Password</label>
@@ -439,27 +468,29 @@ export default function AuthPage() {
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-dark-700 font-bold text-sm mb-1.5">Confirm Password</label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-dark-400" />
-                    <input
-                      type={showConfirmPassword ? 'text' : 'password'}
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      placeholder="Confirm your password"
-                      required
-                      className="w-full pl-10 pr-10 py-3 border border-sage-200 rounded-xl text-sm text-dark-800 bg-white outline-none transition-all focus:ring-2 focus:ring-sage-300 focus:border-sage-400 hover:border-sage-300 font-medium"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-dark-400 hover:text-sage-700 transition-colors"
-                    >
-                      {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                    </button>
+                {mode === 'signup' && (
+                  <div>
+                    <label className="block text-dark-700 font-bold text-sm mb-1.5">Confirm Password</label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-dark-400" />
+                      <input
+                        type={showConfirmPassword ? 'text' : 'password'}
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        placeholder="Confirm your password"
+                        required
+                        className="w-full pl-10 pr-10 py-3 border border-sage-200 rounded-xl text-sm text-dark-800 bg-white outline-none transition-all focus:ring-2 focus:ring-sage-300 focus:border-sage-400 hover:border-sage-300 font-medium"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-dark-400 hover:text-sage-700 transition-colors"
+                      >
+                        {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {mode === 'signin' && (
                   <div className="flex justify-end">

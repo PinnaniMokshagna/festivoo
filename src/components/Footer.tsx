@@ -86,9 +86,9 @@ export default function Footer() {
             </p>
             <div className="space-y-3 mb-6">
               {[
-                { icon: Mail, text: 'hello@festivo.in' },
-                { icon: Phone, text: '+91 62810 37993' },
-                { icon: MapPin, text: 'Mumbai, Maharashtra, India' },
+                { icon: Mail, text: 'Arshithgroup@info.com' },
+                { icon: Phone, text: '+91 8618471424' },
+                { icon: MapPin, text: 'Banglore, Karnataka, India' },
               ].map(({ icon: Icon, text }) => (
                 <div key={text} className="flex items-center gap-3">
                   <Icon className="w-4 h-4 text-sage-500 flex-shrink-0" />
@@ -162,7 +162,7 @@ export default function Footer() {
 
         <div className="border-t border-white/5 mt-8 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sage-500 text-sm font-medium">
-            © 2026 Festivo Technologies Pvt. Ltd. All rights reserved.
+            © 2026 Arshithgroup Pvt. Ltd. All rights reserved.
           </p>
         </div>
       </div>

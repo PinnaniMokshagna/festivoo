@@ -7,7 +7,6 @@ const navLinks = [
   { label: 'Home', href: '/' },
   { label: 'Explore', href: '/explore' },
   { label: 'Vendors', href: '/vendors' },
-  { label: 'About', href: '/about' },
 ];
 
 export default function Navbar() {
