@@ -4,7 +4,7 @@ import {
   Sparkles, Mail, Lock, User, Eye, EyeOff, ArrowRight, ArrowLeft,
   CheckCircle2, Building2, Users, Star, Shield, Zap,
   Camera, Utensils, Flower2, Music, Store, Search, CalendarCheck,
-  TrendingUp, Heart, Briefcase
+  TrendingUp, Heart, Briefcase, Phone
 } from 'lucide-react';
 import { useAuth, type UserRole } from '../lib/auth';
 
@@ -46,8 +46,11 @@ export default function AuthPage() {
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -79,6 +82,10 @@ export default function AuthPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    if (confirmPassword && password !== confirmPassword) {
+      return setError('Passwords do not match. Please check and try again.');
+    }
 
     if (mode === 'signup') {
       if (!name.trim()) return setError('Please enter your full name');
@@ -397,6 +404,20 @@ export default function AuthPage() {
                 </div>
 
                 <div>
+                  <label className="block text-dark-700 font-bold text-sm mb-1.5">Mobile Number</label>
+                  <div className="relative">
+                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-dark-400" />
+                    <input
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="+91 98765 43210"
+                      className="w-full pl-10 pr-4 py-3 border border-sage-200 rounded-xl text-sm text-dark-800 bg-white outline-none transition-all focus:ring-2 focus:ring-sage-300 focus:border-sage-400 hover:border-sage-300 font-medium"
+                    />
+                  </div>
+                </div>
+
+                <div>
                   <label className="block text-dark-700 font-bold text-sm mb-1.5">Password</label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-dark-400" />
@@ -414,6 +435,28 @@ export default function AuthPage() {
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-dark-400 hover:text-sage-700 transition-colors"
                     >
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-dark-700 font-bold text-sm mb-1.5">Confirm Password</label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-dark-400" />
+                    <input
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="Confirm your password"
+                      required
+                      className="w-full pl-10 pr-10 py-3 border border-sage-200 rounded-xl text-sm text-dark-800 bg-white outline-none transition-all focus:ring-2 focus:ring-sage-300 focus:border-sage-400 hover:border-sage-300 font-medium"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-dark-400 hover:text-sage-700 transition-colors"
+                    >
+                      {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
                 </div>

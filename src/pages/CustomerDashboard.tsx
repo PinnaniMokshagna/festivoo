@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Calendar, Star, TrendingUp, Clock, CheckCircle2, XCircle,
   Download, ArrowRight, Sparkles, Heart, Wallet, Bell,
@@ -136,10 +136,18 @@ const DEMO_BOOKINGS: BookingWithVendor[] = [
 
 export default function CustomerDashboard() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { user, profile, signOut } = useAuth();
   const [bookings, setBookings] = useState<BookingWithVendor[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'overview' | 'bookings' | 'saved' | 'invoices'>('overview');
+
+  useEffect(() => {
+    const tabParam = searchParams.get('tab');
+    if (tabParam && ['overview', 'bookings', 'saved', 'invoices'].includes(tabParam)) {
+      setActiveTab(tabParam as 'overview' | 'bookings' | 'saved' | 'invoices');
+    }
+  }, [searchParams]);
   const [reviewingBooking, setReviewingBooking] = useState<string | null>(null);
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewComment, setReviewComment] = useState('');
@@ -444,7 +452,6 @@ export default function CustomerDashboard() {
                     <div className="space-y-3">
                       {[
                         { label: 'Browse Vendors', icon: ArrowRight, action: () => navigate('/vendors') },
-                        { label: 'Plan Budget', icon: Wallet, action: () => navigate('/budget-planner') },
                         { label: 'Explore Services', icon: Sparkles, action: () => navigate('/explore') },
                       ].map(({ label, icon: Icon, action }) => (
                         <button 

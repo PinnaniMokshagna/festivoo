@@ -15,7 +15,6 @@ const ExplorePage = lazy(() => import('./pages/ExplorePage'));
 const VendorDashboard = lazy(() => import('./pages/VendorDashboard'));
 const CustomerDashboard = lazy(() => import('./pages/CustomerDashboard'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
-const BudgetPlannerPage = lazy(() => import('./pages/BudgetPlannerPage'));
 const CategoryDetailPage = lazy(() => import('./pages/CategoryDetailPage'));
 
 function PageLoader() {
@@ -47,7 +46,6 @@ export default function App() {
             <Route path="/vendor-dashboard" element={<VendorDashboard />} />
             <Route path="/dashboard" element={<CustomerDashboard />} />
             <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/budget-planner" element={<BudgetPlannerPage />} />
             <Route path="/category/:category" element={<CategoryDetailPage />} />
           </Routes>
         </Suspense>

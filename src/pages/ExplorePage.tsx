@@ -291,10 +291,10 @@ export default function ExplorePage() {
                 Browse All Vendors <ArrowRight className="w-5 h-5" />
               </button>
               <button
-                onClick={() => navigate('/budget-planner')}
+                onClick={() => navigate('/about')}
                 className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl transition-all"
               >
-                Plan Your Budget
+                Learn More
               </button>
             </div>
           </div>

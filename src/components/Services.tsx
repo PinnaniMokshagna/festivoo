@@ -142,19 +142,19 @@ export default function Services() {
           <div className="relative z-10 max-w-xl text-center md:text-left">
             <span className="text-gold-400 text-xs font-bold tracking-widest uppercase mb-2 block">Need custom recommendations?</span>
             <h3 className="font-display text-3xl sm:text-4xl font-bold mb-3 leading-tight">
-              Can't decide which vendor fits your budget?
+              Ready to plan your dream event?
             </h3>
             <p className="text-sage-200 text-sm font-medium">
-              Use our AI Budget Planner to instantly calculate customized pricing for all 14 categories in your city.
+              Explore all 2,500+ verified venues, photographers, caterers, and decorators tailored to your city.
             </p>
           </div>
 
           <div className="relative z-10 flex-shrink-0">
             <button
-              onClick={() => navigate('/budget-planner')}
+              onClick={() => navigate('/explore')}
               className="px-8 py-4 bg-gradient-to-r from-gold-500 to-amber-600 hover:from-gold-400 hover:to-amber-500 text-sage-950 font-extrabold text-base rounded-2xl shadow-lg hover:shadow-gold-500/30 hover:scale-105 transition-all duration-300 flex items-center gap-2 active:scale-95"
             >
-              <span>Try AI Budget Planner</span>
+              <span>Explore All Services</span>
               <ArrowRight className="w-5 h-5" />
             </button>
           </div>

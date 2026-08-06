@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, Sparkles, LogOut, User, Store, LayoutDashboard, Bell } from 'lucide-react';
+import { Menu, X, Sparkles, LogOut, User, Store, LayoutDashboard, Bell, ChevronDown, Calendar, Heart } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../lib/auth';
 
@@ -14,6 +14,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [unreadCount] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
@@ -113,41 +114,68 @@ export default function Navbar() {
                     )}
                   </button>
                 </div>
-                {/* User Display Name & Dashboard Button */}
-                <button
-                  onClick={() => navigate(isVendor ? '/vendor-dashboard' : '/dashboard')}
-                  className={`text-sm font-bold px-3 py-2 rounded-xl transition-all duration-200 flex items-center gap-2 ${
-                    isTransparent ? 'text-white/95 hover:bg-white/10' : 'text-sage-700 hover:bg-sage-100'
-                  }`}
-                >
-                  {isVendor ? <Store className="w-4 h-4" /> : <User className="w-4 h-4" />}
-                  <span>{userDisplayName}</span>
-                  {isVendor && (
-                    <span className="text-xs px-1.5 py-0.5 rounded-full font-bold bg-gold-100 text-gold-700">
-                      Vendor
-                    </span>
+                {/* User Dropdown Button (Username + ChevronDown) */}
+                <div className="relative">
+                  <button
+                    onClick={() => setShowProfileMenu(!showProfileMenu)}
+                    className={`text-xs font-bold px-2.5 py-1.5 rounded-lg transition-all duration-200 flex items-center gap-1.5 ${
+                      isTransparent ? 'text-white/95 hover:bg-white/10' : 'text-sage-700 hover:bg-sage-100'
+                    }`}
+                  >
+                    {isVendor ? <Store className="w-3.5 h-3.5" /> : <User className="w-3.5 h-3.5" />}
+                    <span>{userDisplayName}</span>
+                    {isVendor && (
+                      <span className="text-[10px] px-1.5 py-0.5 rounded-full font-bold bg-gold-100 text-gold-700">
+                        Vendor
+                      </span>
+                    )}
+                    <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${showProfileMenu ? 'rotate-180' : ''}`} />
+                  </button>
+
+                  {/* User Profile Dropdown Menu */}
+                  {showProfileMenu && (
+                    <div className="absolute right-0 mt-1.5 w-44 bg-white rounded-xl shadow-lg border border-sage-100 py-1.5 z-50 animate-fade-in">
+                      <div className="px-3 py-1.5 border-b border-sage-100">
+                        <p className="font-bold text-sage-900 text-xs truncate">{userDisplayName}</p>
+                        <p className="text-dark-500 text-[11px] truncate">{user?.email}</p>
+                      </div>
+
+                      <button
+                        onClick={() => { setShowProfileMenu(false); navigate(isVendor ? '/vendor-dashboard' : '/dashboard?tab=overview'); }}
+                        className="w-full flex items-center gap-2 px-3 py-1.5 text-xs font-bold text-sage-800 hover:bg-sage-50 transition-colors text-left"
+                      >
+                        <LayoutDashboard className="w-3.5 h-3.5 text-sage-600" />
+                        <span>Dashboard</span>
+                      </button>
+
+                      <button
+                        onClick={() => { setShowProfileMenu(false); navigate(isVendor ? '/vendor-dashboard' : '/dashboard?tab=bookings'); }}
+                        className="w-full flex items-center gap-2 px-3 py-1.5 text-xs font-bold text-sage-800 hover:bg-sage-50 transition-colors text-left"
+                      >
+                        <Calendar className="w-3.5 h-3.5 text-sage-600" />
+                        <span>Bookings</span>
+                      </button>
+
+                      <button
+                        onClick={() => { setShowProfileMenu(false); navigate(isVendor ? '/vendor-dashboard' : '/dashboard?tab=saved'); }}
+                        className="w-full flex items-center gap-2 px-3 py-1.5 text-xs font-bold text-sage-800 hover:bg-sage-50 transition-colors text-left"
+                      >
+                        <Heart className="w-3.5 h-3.5 text-sage-600" />
+                        <span>Saved</span>
+                      </button>
+
+                      <div className="border-t border-sage-100 my-1" />
+
+                      <button
+                        onClick={() => { setShowProfileMenu(false); handleSignOut(); }}
+                        className="w-full flex items-center gap-2 px-3 py-1.5 text-xs font-bold text-red-600 hover:bg-red-50 transition-colors text-left"
+                      >
+                        <LogOut className="w-3.5 h-3.5" />
+                        <span>Sign Out</span>
+                      </button>
+                    </div>
                   )}
-                </button>
-                {/* Dashboard Shortcut Icon */}
-                <button
-                  onClick={() => navigate(isVendor ? '/vendor-dashboard' : '/dashboard')}
-                  className={`p-2 rounded-xl transition-all hover:scale-110 ${
-                    isTransparent ? 'text-white hover:bg-white/10' : 'text-sage-700 hover:bg-sage-100'
-                  }`}
-                  aria-label="Dashboard"
-                >
-                  <LayoutDashboard className="w-4 h-4" />
-                </button>
-                {/* Sign Out Icon */}
-                <button
-                  onClick={handleSignOut}
-                  className={`p-2 rounded-xl transition-all hover:scale-110 ${
-                    isTransparent ? 'text-white hover:bg-white/10' : 'text-sage-700 hover:bg-sage-100'
-                  }`}
-                  aria-label="Sign out"
-                >
-                  <LogOut className="w-4 h-4" />
-                </button>
+                </div>
               </>
             ) : (
               /* BEFORE SIGNED IN (GUEST STATE) */
