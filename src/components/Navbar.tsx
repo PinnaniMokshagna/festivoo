@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, Sparkles, LogOut, User, Store, LayoutDashboard } from 'lucide-react';
+import { Menu, X, Sparkles, LogOut, User, Store, LayoutDashboard, Bell } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../lib/auth';
 
@@ -13,6 +13,8 @@ const navLinks = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [unreadCount] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
   const isHome = location.pathname === '/';
@@ -62,48 +64,71 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="relative">
-              <div className="w-10 h-10 rounded-xl bg-gradient-brand flex items-center justify-center shadow-glow group-hover:scale-110 transition-transform duration-300">
-                <Sparkles className="w-5 h-5 text-white" />
+          <div className="flex items-center gap-8">
+            <Link to="/" className="flex items-center gap-2 group">
+              <div className="relative">
+                <div className="w-10 h-10 rounded-xl bg-gradient-brand flex items-center justify-center shadow-glow group-hover:scale-110 transition-transform duration-300">
+                  <Sparkles className="w-5 h-5 text-white" />
+                </div>
               </div>
-            </div>
-            <span className={`font-display text-2xl font-bold tracking-tight transition-colors duration-300 ${isTransparent ? 'text-white' : 'text-sage-900'}`}>
-              Festivo
-            </span>
-          </Link>
+              <span className={`font-display text-2xl font-bold tracking-tight transition-colors duration-300 ${isTransparent ? 'text-white' : 'text-sage-900'}`}>
+                Festivo
+              </span>
+            </Link>
 
-          <nav className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <button
-                key={link.label}
-                onClick={() => handleNavClick(link.href)}
-                className={`text-sm font-bold hover-underline transition-colors duration-200 ${
-                  isTransparent ? 'text-white/95 hover:text-white' : 'text-sage-700 hover:text-sage-600'
-                }`}
-              >
-                {link.label}
-              </button>
-            ))}
-          </nav>
+            <nav className="hidden md:flex items-center gap-6">
+              {navLinks.map((link) => (
+                <button
+                  key={link.label}
+                  onClick={() => handleNavClick(link.href)}
+                  className={`text-sm font-bold hover-underline transition-colors duration-200 ${
+                    isTransparent ? 'text-white/95 hover:text-white' : 'text-sage-700 hover:text-sage-600'
+                  }`}
+                >
+                  {link.label}
+                </button>
+              ))}
+            </nav>
+          </div>
 
-          {/* Desktop right actions */}
-          <div className="hidden md:flex items-center gap-3">
+          {/* Desktop Right Actions */}
+          <div className="hidden md:flex items-center gap-2 justify-end ml-auto">
             {user ? (
+              /* SIGNED IN STATE */
               <>
-                {/* Logged-in user display */}
+                {/* Notifications Bell */}
+                <div className="relative">
+                  <button 
+                    onClick={() => setShowNotifications(!showNotifications)}
+                    className={`p-2 rounded-xl transition-all hover:scale-110 relative ${
+                      isTransparent ? 'text-white hover:bg-white/10' : 'text-sage-700 hover:bg-sage-100'
+                    }`}
+                    title="Notifications"
+                  >
+                    <Bell className="w-4.5 h-4.5 text-gold-500" />
+                    {unreadCount > 0 && (
+                      <span className="absolute -top-1 -right-1 w-4 h-4 bg-gold-500 rounded-full text-[10px] font-extrabold text-dark-900 flex items-center justify-center border border-white shadow-sm animate-pulse">
+                        {unreadCount}
+                      </span>
+                    )}
+                  </button>
+                </div>
+                {/* User Display Name & Dashboard Button */}
                 <button
                   onClick={() => navigate(isVendor ? '/vendor-dashboard' : '/dashboard')}
-                  className={`text-sm font-bold px-4 py-2 rounded-xl transition-all duration-200 flex items-center gap-2 ${
+                  className={`text-sm font-bold px-3 py-2 rounded-xl transition-all duration-200 flex items-center gap-2 ${
                     isTransparent ? 'text-white/95 hover:bg-white/10' : 'text-sage-700 hover:bg-sage-100'
                   }`}
                 >
                   {isVendor ? <Store className="w-4 h-4" /> : <User className="w-4 h-4" />}
                   <span>{userDisplayName}</span>
-                  <span className={`text-xs px-1.5 py-0.5 rounded-full font-bold ${isVendor ? 'bg-gold-100 text-gold-700' : 'bg-sage-100 text-sage-600'}`}>
-                    {isVendor ? 'Vendor' : 'Customer'}
-                  </span>
+                  {isVendor && (
+                    <span className="text-xs px-1.5 py-0.5 rounded-full font-bold bg-gold-100 text-gold-700">
+                      Vendor
+                    </span>
+                  )}
                 </button>
+                {/* Dashboard Shortcut Icon */}
                 <button
                   onClick={() => navigate(isVendor ? '/vendor-dashboard' : '/dashboard')}
                   className={`p-2 rounded-xl transition-all hover:scale-110 ${
@@ -113,6 +138,7 @@ export default function Navbar() {
                 >
                   <LayoutDashboard className="w-4 h-4" />
                 </button>
+                {/* Sign Out Icon */}
                 <button
                   onClick={handleSignOut}
                   className={`p-2 rounded-xl transition-all hover:scale-110 ${
@@ -124,23 +150,25 @@ export default function Navbar() {
                 </button>
               </>
             ) : (
-              /* Not logged in — single simple Sign In button */
-              <button
-                onClick={() => navigate('/auth')}
-                className={`text-sm font-bold px-4 py-2 rounded-xl transition-all duration-200 flex items-center gap-1.5 ${
-                  isTransparent ? 'text-white/95 hover:bg-white/10' : 'text-sage-700 hover:bg-sage-100'
-                }`}
-              >
-                <User className="w-4 h-4" />
-                Sign In
-              </button>
+              /* BEFORE SIGNED IN (GUEST STATE) */
+              <>
+                <button
+                  onClick={() => navigate('/auth')}
+                  className={`text-sm font-bold px-4 py-2 rounded-xl transition-all duration-200 flex items-center gap-1.5 ${
+                    isTransparent ? 'text-white/95 hover:bg-white/10' : 'text-sage-700 hover:bg-sage-100'
+                  }`}
+                >
+                  <User className="w-4 h-4" />
+                  Sign In
+                </button>
+                <button
+                  onClick={() => navigate('/vendors')}
+                  className="text-sm font-bold px-5 py-2.5 rounded-xl bg-gradient-brand text-white shadow-glow hover:shadow-card-hover hover:scale-105 transition-all duration-300 active:scale-95"
+                >
+                  Get Started
+                </button>
+              </>
             )}
-            <button
-              onClick={() => navigate('/vendors')}
-              className="text-sm font-bold px-5 py-2.5 rounded-xl bg-gradient-brand text-white shadow-glow hover:shadow-card-hover hover:scale-105 transition-all duration-300 active:scale-95"
-            >
-              Get Started
-            </button>
           </div>
 
           {/* Mobile menu toggle */}
@@ -174,8 +202,8 @@ export default function Navbar() {
           ))}
           <div className="pt-2 flex flex-col gap-2">
             {user ? (
+              /* SIGNED IN (Mobile) */
               <>
-                {/* Mobile: logged in state */}
                 <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-sage-50 border border-sage-200">
                   {isVendor ? <Store className="w-4 h-4 text-sage-700" /> : <User className="w-4 h-4 text-sage-700" />}
                   <span className="text-sm font-bold text-sage-800">{userDisplayName}</span>
@@ -197,7 +225,7 @@ export default function Navbar() {
                 </button>
               </>
             ) : (
-              /* Mobile: not logged in — single Sign In button */
+              /* BEFORE SIGNED IN (Mobile) */
               <button
                 onClick={() => { setMobileOpen(false); navigate('/auth'); }}
                 className="w-full flex items-center justify-center gap-2 text-sm font-bold py-2.5 rounded-xl border border-sage-300 text-sage-700 hover:border-sage-500 transition-colors"
@@ -206,6 +234,7 @@ export default function Navbar() {
                 Sign In
               </button>
             )}
+            
             <button
               onClick={() => { setMobileOpen(false); navigate('/vendors'); }}
               className="w-full text-sm font-bold py-2.5 rounded-xl bg-gradient-brand text-white"

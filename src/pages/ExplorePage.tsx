@@ -29,11 +29,10 @@ export default function ExplorePage() {
   const ctaRef = useInView<HTMLDivElement>();
 
   useEffect(() => {
-    // Reveal text after initial video playback (~4.5s) or on completion
+    // Show image first for 1 second, then reveal text content smoothly
     const timer = setTimeout(() => {
-      setVideoDimmed(true);
       setShowContent(true);
-    }, 4000);
+    }, 1000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -62,26 +61,34 @@ export default function ExplorePage() {
     <>
       <Navbar />
       <div className="min-h-screen bg-cream-50/50 pt-16">
-        {/* Clean Brand Gradient Hero Section */}
-        <section ref={heroRef.ref} className="bg-gradient-to-br from-sage-950 via-sage-900 to-sage-950 py-20 relative overflow-hidden">
-          <div className="orb w-96 h-96 bg-sage-600/20 -top-20 -left-20" />
-          <div className="orb w-72 h-72 bg-gold-500/10 bottom-0 right-10" style={{ animationDelay: '2s' }} />
+        {/* Explore Hero Section with Background Image & 1s Delay Text Animation */}
+        <section ref={heroRef.ref} className="py-24 md:py-32 relative overflow-hidden bg-sage-950">
+          {/* Background Alpine Vows Image */}
+          <div className="absolute inset-0 z-0">
+            <img 
+              src="/images/Alpine-Vows-Evergreen-Dream-Green-Wedding.webp" 
+              alt="Explore Services Background" 
+              className="w-full h-full object-cover scale-105" 
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-sage-950/75 via-sage-950/60 to-sage-950/90" />
+            <div className="absolute inset-0 bg-gradient-to-r from-sage-950/50 via-transparent to-sage-950/50" />
+          </div>
           
           <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             
-            {/* Top Pill */}
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-5 py-2 mb-6 shadow-md">
-              <Sparkles className="w-4 h-4 text-gold-400" />
+            {/* Top Pill - Animates after 1 sec */}
+            <div className={`inline-flex items-center gap-2 bg-white/15 backdrop-blur-md border border-white/30 rounded-full px-5 py-2 mb-6 shadow-md transition-all duration-700 transform ${showContent ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}>
+              <Sparkles className="w-4 h-4 text-gold-400 animate-pulse" />
               <span className="text-white text-xs sm:text-sm font-extrabold uppercase tracking-widest">Explore Services</span>
             </div>
 
-            {/* Headline */}
-            <h1 className={`font-display text-4xl sm:text-5xl md:text-6xl font-extrabold text-white mb-6 leading-tight drop-shadow-xl transition-all duration-700 ${heroRef.inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            {/* Headline - Animates after 1 sec */}
+            <h1 className={`font-display text-4xl sm:text-5xl md:text-6xl font-extrabold text-white mb-6 leading-tight drop-shadow-xl transition-all duration-1000 transform ${showContent ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'}`}>
               Discover Everything You Need <br /> for Your <span className="text-gradient-gold bg-clip-text text-transparent bg-gradient-to-r from-gold-300 via-amber-400 to-gold-500">Perfect Event</span>
             </h1>
 
-            {/* Subtitle */}
-            <p className={`text-sage-200 text-base sm:text-lg max-w-2xl mx-auto font-medium leading-relaxed transition-all duration-700 delay-200 ${heroRef.inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            {/* Subtitle - Animates after 1 sec */}
+            <p className={`text-sage-200 text-base sm:text-lg max-w-2xl mx-auto font-medium leading-relaxed transition-all duration-1000 delay-300 transform ${showContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               From photographers to pandits, DJs to decorators — browse all 14 event service categories in one place.
             </p>
           </div>

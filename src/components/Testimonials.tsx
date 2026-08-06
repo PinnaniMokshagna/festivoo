@@ -1,5 +1,4 @@
 import { Star, Quote, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useInView } from '../hooks/useInView';
 import { useState, useEffect } from 'react';
 
 const testimonials = [
@@ -42,111 +41,204 @@ const testimonials = [
 ];
 
 export default function Testimonials() {
-  const { ref, inView } = useInView();
   const [current, setCurrent] = useState(0);
-  const [isAuto, setIsAuto] = useState(true);
+  const [fade, setFade] = useState(true);
 
+  // Auto-rotation every 4 seconds with smooth cross-fade animation
   useEffect(() => {
-    if (!isAuto) return;
-    const interval = setInterval(() => setCurrent((c) => (c + 1) % testimonials.length), 5000);
-    return () => clearInterval(interval);
-  }, [isAuto]);
+    const timer = setInterval(() => {
+      setFade(false);
+      setTimeout(() => {
+        setCurrent((prev) => (prev + 1) % testimonials.length);
+        setFade(true);
+      }, 200);
+    }, 4000);
+
+    return () => clearInterval(timer);
+  }, [current]);
+
+  const handleSelect = (index: number) => {
+    if (index === current) return;
+    setFade(false);
+    setTimeout(() => {
+      setCurrent(index);
+      setFade(true);
+    }, 200);
+  };
+
+  const handlePrev = () => {
+    setFade(false);
+    setTimeout(() => {
+      setCurrent((c) => (c - 1 + testimonials.length) % testimonials.length);
+      setFade(true);
+    }, 200);
+  };
+
+  const handleNext = () => {
+    setFade(false);
+    setTimeout(() => {
+      setCurrent((c) => (c + 1) % testimonials.length);
+      setFade(true);
+    }, 200);
+  };
 
   const t = testimonials[current];
 
   return (
-    <section className="py-24 bg-cream-50 relative overflow-hidden" ref={ref}>
-      <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-sage-50/60 to-transparent" />
-
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className={`text-center mb-16 animate-on-scroll ${inView ? 'in-view' : ''}`}>
-          <span className="inline-block text-sage-600 text-sm font-bold tracking-widest uppercase mb-3">Client Stories</span>
-          <h2 className="font-display text-4xl md:text-5xl font-bold text-sage-900">
-            Moments That <span className="text-gradient">Matter</span>
+    <section className="py-24 bg-[#f8f7f5] relative overflow-hidden">
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Header */}
+        <div className="text-center mb-12">
+          <span className="inline-block text-[#3b5d43] text-xs md:text-sm font-bold tracking-widest uppercase mb-2">
+            Client Stories
+          </span>
+          <h2 className="font-serif text-4xl md:text-5xl font-bold text-[#1c3323]">
+            Moments That <span className="text-[#48634e]">Matter</span>
           </h2>
+          <p className="text-dark-500 text-sm md:text-base font-medium mt-2 max-w-xl mx-auto">
+            See how real clients across India host unforgettable celebrations with Festivo.
+          </p>
         </div>
 
-        <div className={`animate-on-scroll ${inView ? 'in-view' : ''} delay-200`}>
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-white rounded-3xl shadow-card p-8 md:p-12 relative overflow-hidden border border-sage-100">
-              <div className="absolute top-6 right-8 opacity-10">
-                <Quote className="w-24 h-24 text-sage-500" />
-              </div>
-
-              <div className="flex flex-col md:flex-row gap-8 items-start">
-                <div className="flex-shrink-0">
-                  <div className="relative">
-                    <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${t.color} flex items-center justify-center ring-4 ring-sage-100`}>
-                      <span className="text-white font-display font-bold text-xl">{t.initials}</span>
-                    </div>
-                    <div className="absolute -bottom-2 -right-2 bg-sage-600 rounded-full p-1">
-                      <Star className="w-3.5 h-3.5 text-white fill-white" />
-                    </div>
-                  </div>
-                  <div className="mt-4">
-                    <p className="font-bold text-sage-900">{t.name}</p>
-                    <p className="text-dark-500 text-sm font-medium">{t.role}</p>
-                    <span className="inline-block mt-2 bg-sage-100 text-sage-700 text-xs font-bold px-3 py-1 rounded-full">{t.event}</span>
-                  </div>
-                </div>
-
-                <div className="flex-1">
-                  <div className="flex gap-1 mb-4">
-                    {Array.from({ length: t.rating }).map((_, i) => (
-                      <Star key={i} className="w-5 h-5 text-gold-500 fill-gold-400" />
-                    ))}
-                  </div>
-                  <p className="text-dark-700 text-lg leading-relaxed mb-6 italic font-medium">"{t.text}"</p>
-                  <div className="inline-flex items-center gap-2 bg-sage-50 border border-sage-200 rounded-xl px-4 py-2">
-                    <div className="w-2 h-2 rounded-full bg-sage-500" />
-                    <span className="text-sage-700 text-sm font-bold">{t.highlight}</span>
-                  </div>
-                </div>
+        {/* ========================================================================= */}
+        {/*                      REALISTIC IPAD PRO DEVICE FRAME                      */}
+        {/* ========================================================================= */}
+        <div className="relative max-w-4xl mx-auto">
+          {/* Outer Metallic iPad Chassis (Space Gray / Obsidian Finish) */}
+          <div className="bg-gradient-to-b from-[#2e3530] via-[#1d231e] to-[#131714] rounded-[48px] p-4 md:p-6 shadow-[0_30px_70px_-15px_rgba(20,35,25,0.45)] border border-white/20 relative">
+            
+            {/* iPad Top Camera Lens Dot */}
+            <div className="flex items-center justify-center mb-3">
+              <div className="w-3.5 h-3.5 bg-black rounded-full border border-neutral-700/80 flex items-center justify-center shadow-inner">
+                <div className="w-1.5 h-1.5 bg-[#1a2538] rounded-full" />
               </div>
             </div>
 
-            <div className="flex items-center justify-between mt-6">
-              <div className="flex gap-2">
-                {testimonials.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => { setIsAuto(false); setCurrent(i); }}
-                    className={`transition-all duration-300 rounded-full ${i === current ? 'w-8 h-2.5 bg-sage-600' : 'w-2.5 h-2.5 bg-sage-200 hover:bg-sage-300'}`}
-                  />
-                ))}
+            {/* iPad Screen (White Glass Display) */}
+            <div className="bg-[#fcfbfa] rounded-[32px] overflow-hidden border border-black/10 shadow-inner p-6 md:p-10 relative flex flex-col justify-between min-h-[460px]">
+              
+              {/* iPad Top Status Bar */}
+              <div className="flex items-center justify-between pb-6 border-b border-sage-100 text-xs font-semibold text-dark-400">
+                <span className="font-serif font-bold text-[#1c3323] text-sm flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> Festivo Reviews
+                </span>
+                <div className="flex items-center gap-3 text-dark-500">
+                  <span>9:41 AM</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-[10px] font-bold text-dark-600">5G</span>
+                    <div className="w-5 h-2.5 border border-dark-600 rounded-xs p-0.5 flex items-center">
+                      <div className="w-full h-full bg-dark-700 rounded-xs" />
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="flex gap-2">
-                <button onClick={() => { setIsAuto(false); setCurrent((c) => (c - 1 + testimonials.length) % testimonials.length); }} className="w-10 h-10 rounded-xl border border-sage-200 flex items-center justify-center text-sage-700 hover:border-sage-400 hover:bg-sage-50 transition-all duration-200">
-                  <ChevronLeft className="w-5 h-5" />
-                </button>
-                <button onClick={() => { setIsAuto(false); setCurrent((c) => (c + 1) % testimonials.length); }} className="w-10 h-10 rounded-xl bg-gradient-brand text-white flex items-center justify-center hover:shadow-glow transition-all duration-200">
-                  <ChevronRight className="w-5 h-5" />
-                </button>
+
+              {/* Main Review Card Inside iPad */}
+              <div className={`py-6 relative transition-opacity duration-300 ${fade ? 'opacity-100' : 'opacity-0'}`}>
+                {/* Background Quote Mark Watermark */}
+                <div className="absolute top-0 right-4 opacity-10 pointer-events-none">
+                  <Quote className="w-32 h-32 text-[#48634e]" />
+                </div>
+
+                <div className="flex flex-col md:flex-row gap-8 items-start relative z-10">
+                  {/* Left Column: Client Avatar & Badge */}
+                  <div className="flex-shrink-0">
+                    <div className="relative inline-block">
+                      <div className="w-20 h-20 rounded-2xl bg-[#48634e] flex items-center justify-center ring-4 ring-[#eef4ed] shadow-md">
+                        <span className="text-white font-serif font-bold text-2xl tracking-wider">{t.initials}</span>
+                      </div>
+                      <div className="absolute -bottom-1 -right-1 bg-[#3b5d43] rounded-full p-1.5 shadow">
+                        <Star className="w-3.5 h-3.5 text-white fill-white" />
+                      </div>
+                    </div>
+                    <div className="mt-4">
+                      <h3 className="font-serif font-bold text-[#1c3323] text-lg">{t.name}</h3>
+                      <p className="text-dark-500 text-xs md:text-sm font-medium mt-0.5">{t.role}</p>
+                      <span className="inline-block mt-3 bg-[#eef4ed] text-[#3b5d43] text-xs font-bold px-3 py-1 rounded-full border border-[#d8e7d9]">
+                        {t.event}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Right Column: Rating Stars, Review Text, & Highlight Badge */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex gap-1 mb-4">
+                      {Array.from({ length: t.rating }).map((_, i) => (
+                        <Star key={i} className="w-5 h-5 text-amber-500 fill-amber-500" />
+                      ))}
+                    </div>
+                    <p className="text-[#1c3323] text-lg md:text-xl leading-relaxed mb-6 italic font-serif font-medium">
+                      "{t.text}"
+                    </p>
+                    <div className="inline-flex items-center gap-2.5 bg-[#eef4ed] border border-[#d8e7d9] rounded-full px-4 py-2 shadow-xs">
+                      <div className="w-2.5 h-2.5 rounded-full bg-[#3b5d43]" />
+                      <span className="text-[#3b5d43] text-xs md:text-sm font-bold">{t.highlight}</span>
+                    </div>
+                  </div>
+                </div>
               </div>
+
+              {/* Bottom iPad Review Selector Dock Bar */}
+              <div className="pt-6 border-t border-sage-100">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+                    <span className="text-xs font-bold text-dark-400 uppercase tracking-wider">Auto Rotating Client Reviews</span>
+                  </div>
+                  <div className="flex gap-2">
+                    <button 
+                      onClick={handlePrev} 
+                      className="w-8 h-8 rounded-lg border border-sage-200 flex items-center justify-center text-[#3b5d43] hover:border-sage-400 hover:bg-sage-50 transition-all active:scale-95"
+                      aria-label="Previous Review"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                    </button>
+                    <button 
+                      onClick={handleNext} 
+                      className="w-8 h-8 rounded-lg bg-[#3b5d43] text-white flex items-center justify-center hover:bg-[#2d4934] transition-all shadow-sm active:scale-95"
+                      aria-label="Next Review"
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* 4 Client App Dock Selector Cards */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {testimonials.map((tt, i) => (
+                    <button
+                      key={tt.name}
+                      onClick={() => handleSelect(i)}
+                      className={`p-3 rounded-xl text-left transition-all duration-300 border-2 ${
+                        i === current 
+                          ? 'border-[#3b5d43] bg-white shadow-md scale-[1.02]' 
+                          : 'border-transparent bg-sage-50/70 hover:bg-white hover:border-sage-200'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2.5 mb-1.5">
+                        <div className="w-8 h-8 rounded-lg flex-shrink-0 bg-[#48634e] flex items-center justify-center shadow-xs">
+                          <span className="text-white font-serif font-bold text-xs">{tt.initials}</span>
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-[#1c3323] font-bold text-xs truncate">{tt.name}</p>
+                          <p className="text-dark-400 text-[10px] truncate">{tt.event}</p>
+                        </div>
+                      </div>
+                      <div className="flex gap-0.5">
+                        {Array.from({ length: tt.rating }).map((_, j) => (
+                          <Star key={j} className="w-2.5 h-2.5 text-amber-500 fill-amber-500" />
+                        ))}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
             </div>
+
+            {/* iPad Bottom Home Bar Indicator */}
+            <div className="w-36 h-1 bg-white/30 rounded-full mx-auto mt-3" />
           </div>
-        </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10">
-          {testimonials.map((tt, i) => (
-            <button
-              key={tt.name}
-              onClick={() => { setIsAuto(false); setCurrent(i); }}
-              className={`p-4 rounded-2xl text-left transition-all duration-300 border-2 ${i === current ? 'border-sage-400 bg-white shadow-card' : 'border-transparent bg-white/60 hover:bg-white hover:border-sage-200'}`}
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-8 h-8 rounded-full flex-shrink-0 bg-gradient-to-br from-sage-500 to-sage-700 flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">{tt.initials}</span>
-                </div>
-                <p className="text-sage-800 font-bold text-xs truncate">{tt.name.split(' ')[0]}</p>
-              </div>
-              <div className="flex gap-0.5">
-                {Array.from({ length: tt.rating }).map((_, j) => (
-                  <Star key={j} className="w-3 h-3 text-gold-500 fill-gold-400" />
-                ))}
-              </div>
-            </button>
-          ))}
         </div>
       </div>
     </section>
