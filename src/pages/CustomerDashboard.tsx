@@ -159,6 +159,7 @@ export default function CustomerDashboard() {
   const [chatMessages, setChatMessages] = useState<Array<{ id: string; sender: 'user' | 'vendor'; text: string; time: string }>>([]);
   const [chatInputText, setChatInputText] = useState('');
   const [activeCallVendor, setActiveCallVendor] = useState<{ name: string; phone: string; location: string } | null>(null);
+  const [previewImage, setPreviewImage] = useState<{ url: string; title: string; subtitle?: string; slug?: string } | null>(null);
 
   const statsView = useInView<HTMLDivElement>();
 
@@ -705,6 +706,72 @@ export default function CustomerDashboard() {
             <button onClick={() => setActiveCallVendor(null)} className="text-xs font-bold text-sage-600 hover:underline">
               Close
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* 🖼️ Full-Screen Image Preview Lightbox Modal */}
+      {previewImage && (
+        <div 
+          onClick={() => setPreviewImage(null)}
+          className="fixed inset-0 bg-dark-900/80 backdrop-blur-xs z-50 flex items-center justify-center p-4"
+        >
+          <div 
+            onClick={e => e.stopPropagation()}
+            className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full overflow-hidden flex flex-col animate-scale-up"
+          >
+            {/* Modal Header */}
+            <div className="p-4 bg-gradient-to-r from-sage-900 to-dark-900 text-white flex items-center justify-between">
+              <div>
+                <h3 className="font-bold text-base text-white">{previewImage.title}</h3>
+                {previewImage.subtitle && (
+                  <p className="text-xs text-sage-300 font-medium">{previewImage.subtitle} · Festivo Photo Gallery</p>
+                )}
+              </div>
+              <button
+                onClick={() => setPreviewImage(null)}
+                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors"
+                title="Close Preview"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Large Image Preview Box */}
+            <div className="relative bg-dark-950 max-h-[70vh] flex items-center justify-center overflow-hidden p-3">
+              <img
+                src={previewImage.url}
+                alt={previewImage.title}
+                onError={(e) => {
+                  e.currentTarget.src = 'https://images.pexels.com/photos/1444442/pexels-photo-1444442.jpeg?auto=compress&cs=tinysrgb&w=1200';
+                }}
+                className="max-h-[65vh] w-auto max-w-full object-contain rounded-xl shadow-2xl"
+              />
+            </div>
+
+            {/* Modal Footer Actions */}
+            <div className="p-4 bg-cream-50 flex items-center justify-between gap-3 border-t border-sage-100">
+              <span className="text-xs text-dark-500 font-medium hidden sm:inline">✨ Verified High Resolution Photo</span>
+              <div className="flex items-center gap-2 ml-auto">
+                {previewImage.slug && (
+                  <button
+                    onClick={() => {
+                      navigate(`/vendors/${previewImage.slug}`);
+                      setPreviewImage(null);
+                    }}
+                    className="px-4 py-2 bg-gradient-brand text-white font-bold rounded-xl text-xs hover:shadow-glow transition-all flex items-center gap-1.5"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-gold-300" /> View Vendor Page
+                  </button>
+                )}
+                <button
+                  onClick={() => setPreviewImage(null)}
+                  className="px-4 py-2 bg-white border border-sage-200 text-sage-800 font-bold rounded-xl text-xs hover:bg-sage-100 transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
