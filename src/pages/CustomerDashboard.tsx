@@ -342,7 +342,7 @@ export default function CustomerDashboard() {
                     value: totalSpent > 0 ? `₹${(totalSpent / 1000).toFixed(0)}K` : '₹290K',
                     icon: Wallet,
                     iconBg: 'bg-[#fbf3e6] text-[#866838]',
-                    action: () => setActiveTab('invoices')
+                    action: () => setActiveTab('payments')
                   },
                   {
                     label: 'Reviews Given',
