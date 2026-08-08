@@ -407,7 +407,7 @@ export default function CustomerDashboard() {
         {/* Header Banner */}
         <div className="bg-[#243e2b] py-8 relative overflow-hidden text-white">
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
               <div 
                 onClick={() => setShowProfileModal(true)}
                 className="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-[#3b5942] via-[#2d4733] to-[#1c3222] border-2 border-white/20 overflow-hidden shadow-lg flex items-center justify-center flex-shrink-0 cursor-pointer group hover:border-gold-400 transition-all"
@@ -426,42 +426,44 @@ export default function CustomerDashboard() {
                   <span className="text-[9px] font-extrabold uppercase tracking-wider text-gold-200 mt-0.5">Edit</span>
                 </div>
               </div>
-              <div>
-                <div className="flex items-center gap-3">
-                  <h1 className="font-display text-3xl font-bold text-white tracking-wide">
+              <div className="min-w-0 flex-1 w-full">
+                <div className="flex flex-wrap items-center justify-between sm:justify-start gap-2.5 sm:gap-3">
+                  <h1 className="font-display text-2xl sm:text-3xl font-bold text-white tracking-wide truncate max-w-full">
                     {profile?.full_name || user?.email?.split('@')[0] || 'User'}!
                   </h1>
-                  <button
-                    onClick={() => setShowProfileModal(true)}
-                    className="px-3.5 py-1.5 bg-white/10 hover:bg-white/20 text-white border border-white/20 text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 backdrop-blur-md shadow-sm hover:scale-105"
-                    title="Edit Account & Profile Settings"
-                  >
-                    <User className="w-3.5 h-3.5 text-gold-400" /> Edit Profile
-                  </button>
-                  <button
-                    onClick={() => setShowHelpCenter(true)}
-                    className="px-3.5 py-1.5 bg-gold-500/20 hover:bg-gold-500/30 text-gold-300 border border-gold-400/30 text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 backdrop-blur-md shadow-sm hover:scale-105"
-                    title="Open PhonePe-Style 24x7 Customer Support"
-                  >
-                    <LifeBuoy className="w-3.5 h-3.5 text-gold-400" /> 24x7 Support
-                  </button>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <button
+                      onClick={() => setShowProfileModal(true)}
+                      className="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white border border-white/20 text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 backdrop-blur-md shadow-sm hover:scale-105"
+                      title="Edit Account & Profile Settings"
+                    >
+                      <User className="w-3.5 h-3.5 text-gold-400" /> Edit Profile
+                    </button>
+                    <button
+                      onClick={() => setShowHelpCenter(true)}
+                      className="px-3 py-1.5 bg-gold-500/20 hover:bg-gold-500/30 text-gold-300 border border-gold-400/30 text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 backdrop-blur-md shadow-sm hover:scale-105"
+                      title="Open PhonePe-Style 24x7 Customer Support"
+                    >
+                      <LifeBuoy className="w-3.5 h-3.5 text-gold-400" /> 24x7 Support
+                    </button>
+                  </div>
                 </div>
-                <div className="flex items-center gap-3 mt-1.5">
-                  <span className="bg-[#47654e] text-white text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1">
+                <div className="flex items-center gap-2 sm:gap-3 mt-2 flex-wrap">
+                  <span className="bg-[#47654e] text-white text-xs font-semibold px-3 py-0.5 rounded-full flex items-center gap-1">
                     <Star className="w-3 h-3 text-gold-400 fill-gold-400" /> Customer
                   </span>
-                  <span className="text-sage-200/90 text-sm font-medium">{user?.email}</span>
+                  <span className="text-white/80 text-xs truncate max-w-[200px] sm:max-w-none">{user?.email}</span>
                 </div>
               </div>
             </div>
 
-            {/* Tabs */}
-            <div className="flex gap-2 mt-8 overflow-x-auto">
+            {/* Sub-header Navigation Tabs */}
+            <div className="flex gap-2 overflow-x-auto pb-1 mt-6 scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0">
               {(['overview', 'bookings', 'saved', 'payments'] as const).map(tab => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all capitalize whitespace-nowrap ${
+                  className={`px-4 sm:px-6 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all capitalize whitespace-nowrap flex-shrink-0 ${
                     activeTab === tab
                       ? 'bg-white text-sage-900 shadow-md'
                       : 'text-white/80 hover:text-white hover:bg-white/10'

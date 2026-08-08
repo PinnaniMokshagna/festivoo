@@ -326,13 +326,38 @@ export default function Navbar() {
             {user ? (
               /* SIGNED IN (Mobile) */
               <>
-                <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-sage-50 border border-sage-200">
-                  {isVendor ? <Store className="w-4 h-4 text-sage-700" /> : <User className="w-4 h-4 text-sage-700" />}
-                  <span className="text-sm font-bold text-sage-800">{userDisplayName}</span>
-                  <span className={`ml-auto text-xs px-2 py-0.5 rounded-full font-bold ${isVendor ? 'bg-gold-100 text-gold-700' : 'bg-sage-100 text-sage-600'}`}>
+                <div className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-sage-50 border border-sage-200">
+                  {avatarUrl ? (
+                    <img src={avatarUrl} alt="Avatar" className="w-8 h-8 rounded-full object-cover border border-gold-400 flex-shrink-0" />
+                  ) : isVendor ? (
+                    <Store className="w-5 h-5 text-sage-700" />
+                  ) : (
+                    <User className="w-5 h-5 text-sage-700" />
+                  )}
+                  <div className="min-w-0 flex-1">
+                    <span className="text-sm font-bold text-sage-900 block truncate">{userDisplayName}</span>
+                    <span className="text-[10px] text-dark-400 font-medium block truncate">{user?.email}</span>
+                  </div>
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${isVendor ? 'bg-gold-100 text-gold-700' : 'bg-sage-100 text-sage-600'}`}>
                     {isVendor ? 'Vendor' : 'Customer'}
                   </span>
                 </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    onClick={() => { setMobileOpen(false); navigate(isVendor ? '/vendor-dashboard' : '/dashboard?tab=bookings'); }}
+                    className="flex items-center justify-center gap-1.5 text-xs font-bold py-2 rounded-xl border border-sage-200 bg-white text-sage-800"
+                  >
+                    <Calendar className="w-3.5 h-3.5 text-sage-600" /> Bookings
+                  </button>
+                  <button
+                    onClick={() => { setMobileOpen(false); navigate(isVendor ? '/vendor-dashboard' : '/dashboard?tab=saved'); }}
+                    className="flex items-center justify-center gap-1.5 text-xs font-bold py-2 rounded-xl border border-sage-200 bg-white text-sage-800"
+                  >
+                    <Heart className="w-3.5 h-3.5 text-red-500 fill-red-500" /> Saved
+                  </button>
+                </div>
+
                 <button
                   onClick={() => { setMobileOpen(false); navigate(isVendor ? '/vendor-dashboard' : '/dashboard'); }}
                   className="w-full flex items-center justify-center gap-2 text-sm font-bold py-2.5 rounded-xl border border-sage-200 text-sage-700 hover:bg-sage-50 transition-colors"

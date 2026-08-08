@@ -202,6 +202,20 @@ export default function VendorsPage() {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Mobile Filters Toggle Header */}
+          <div className="lg:hidden mb-4 flex items-center justify-between bg-white p-3.5 rounded-2xl border border-sage-100 shadow-sm">
+            <span className="text-xs font-bold text-sage-900">
+              Showing {filtered.length} Vendors
+            </span>
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className="px-3.5 py-1.5 bg-sage-50 hover:bg-sage-100 border border-sage-200 text-sage-800 font-bold text-xs rounded-xl flex items-center gap-1.5 transition-all"
+            >
+              <SlidersHorizontal className="w-3.5 h-3.5 text-sage-600" />
+              {showFilters ? 'Hide Filters ✕' : 'Filter & Sort ⚙️'}
+            </button>
+          </div>
+
           <div className="flex flex-col lg:flex-row gap-8">
             <aside className={`lg:w-64 flex-shrink-0 ${showFilters ? 'block' : 'hidden lg:block'}`}>
               <div className="bg-white rounded-2xl shadow-card p-6 sticky top-24">

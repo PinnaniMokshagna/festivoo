@@ -556,8 +556,8 @@ export default function PaymentsTab({ bookings: userBookings, setBookings, userE
 
       {/* 🧾 Formal Tax Invoice & Official Receipt Modal */}
       {viewReceiptBooking && (
-        <div className="fixed inset-0 z-50 bg-dark-900/75 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full overflow-hidden border border-sage-200 my-auto animate-scale-up">
+        <div className="fixed inset-0 z-50 bg-dark-900/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[88vh] my-auto overflow-hidden flex flex-col border border-sage-200 animate-scale-up">
             {/* Action Bar */}
             <div className="bg-sage-950 px-6 py-4 flex items-center justify-between text-white">
               <div className="flex items-center gap-2">
@@ -581,7 +581,7 @@ export default function PaymentsTab({ bookings: userBookings, setBookings, userE
             </div>
 
             {/* Receipt Printable Card */}
-            <div className="p-8 space-y-6 bg-white text-dark-900" id="official-tax-receipt">
+            <div className="p-4 sm:p-8 space-y-6 bg-white text-dark-900 overflow-y-auto flex-1" id="official-tax-receipt">
               {/* Receipt Header */}
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-6 border-b border-sage-200">
                 <div>
