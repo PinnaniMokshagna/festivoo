@@ -25,8 +25,11 @@ const PRICE_RANGES = [
   { label: 'Above ₹1,50,000', min: 150000, max: Infinity },
 ];
 
+import { useSavedVendors } from '../lib/savedVendors';
+
 function VendorCard({ vendor }: { vendor: Vendor }) {
-  const [liked, setLiked] = useState(false);
+  const { isSaved, toggleSave } = useSavedVendors();
+  const liked = isSaved(vendor.id);
   const [imgLoaded, setImgLoaded] = useState(false);
   const navigate = useNavigate();
 
@@ -52,8 +55,17 @@ function VendorCard({ vendor }: { vendor: Vendor }) {
             <span className={`${vendor.badge_color} text-white text-xs font-bold px-2.5 py-1 rounded-full shadow-lg`}>{vendor.badge}</span>
           </div>
         )}
-        <button onClick={(e) => { e.stopPropagation(); setLiked(!liked); }} className="absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-sm">
-          <Heart className={`w-4 h-4 ${liked ? 'text-sage-500 fill-sage-500' : 'text-dark-400'}`} />
+        <button 
+          type="button"
+          onClick={(e) => { 
+            e.preventDefault();
+            e.stopPropagation(); 
+            toggleSave(vendor.id);
+          }} 
+          className="absolute top-3 right-3 w-8.5 h-8.5 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-md z-10"
+          title={liked ? "Saved to your list (Click to remove)" : "Save vendor"}
+        >
+          <Heart className={`w-4 h-4 transition-colors ${liked ? 'text-red-500 fill-red-500' : 'text-sage-700'}`} />
         </button>
         <div className="absolute bottom-3 left-3">
           <span className="bg-white/20 backdrop-blur-sm border border-white/30 text-white text-xs font-medium px-2.5 py-1 rounded-full">{vendor.category}</span>

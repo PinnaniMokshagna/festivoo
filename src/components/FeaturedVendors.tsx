@@ -5,6 +5,8 @@ import { useInView } from '../hooks/useInView';
 import type { Vendor } from '../lib/supabase';
 import { MOCK_VENDORS } from '../lib/vendors';
 
+import { useSavedVendors } from '../lib/savedVendors';
+
 function VendorFlipCard({
   vendor,
   index,
@@ -15,7 +17,8 @@ function VendorFlipCard({
   inView: boolean;
 }) {
   const [isFlipped, setIsFlipped] = useState(false);
-  const [liked, setLiked] = useState(false);
+  const { isSaved, toggleSave } = useSavedVendors();
+  const liked = isSaved(vendor.id);
   const navigate = useNavigate();
 
   return (
@@ -73,13 +76,16 @@ function VendorFlipCard({
               </button>
 
               <button
+                type="button"
                 onClick={(e) => {
+                  e.preventDefault();
                   e.stopPropagation();
-                  setLiked(!liked);
+                  toggleSave(vendor.id);
                 }}
                 className="w-8.5 h-8.5 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center shadow-md hover:scale-110 transition-transform"
+                title={liked ? "Saved to your list (Click to remove)" : "Save vendor"}
               >
-                <Heart className={`w-4 h-4 ${liked ? 'text-rose-500 fill-rose-500' : 'text-dark-400'}`} />
+                <Heart className={`w-4 h-4 transition-colors ${liked ? 'text-red-500 fill-red-500' : 'text-sage-700'}`} />
               </button>
             </div>
 
