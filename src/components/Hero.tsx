@@ -91,7 +91,7 @@ export default function Hero() {
               </div>
 
               {/* Perfectly Proportioned Responsive Title */}
-              <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.15] drop-shadow-xl text-center max-w-4xl mx-auto">
+              <h1 className="font-display text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.15] drop-shadow-xl text-center max-w-4xl mx-auto px-2">
                 <span>{s.title}</span>{' '}
                 <span className="text-gradient-gold bg-clip-text text-transparent bg-gradient-to-r from-gold-300 via-amber-400 to-gold-500 inline-block">
                   {s.highlight}

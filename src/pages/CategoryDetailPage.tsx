@@ -11,7 +11,8 @@ import { supabase } from '../lib/supabase';
 import type { Vendor } from '../lib/supabase';
 import { getCategory, CATEGORIES } from '../lib/categories';
 import { dataCache } from '../lib/cache';
-import { MOCK_VENDORS } from '../lib/vendors';
+import { MOCK_VENDORS, getVendorImageAndGallery } from '../lib/vendors';
+import { useSavedVendors } from '../lib/savedVendors';
 
 export default function CategoryDetailPage() {
   const { category } = useParams<{ category: string }>();
@@ -20,6 +21,7 @@ export default function CategoryDetailPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [selectedVendor, setSelectedVendor] = useState<string | null>(null);
+  const { isSaved, toggleSave } = useSavedVendors();
 
   const heroRef = useInView<HTMLDivElement>();
   const gridRef = useInView<HTMLDivElement>();
@@ -225,6 +227,17 @@ export default function CategoryDetailPage() {
                           {vendor.badge}
                         </span>
                       )}
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleSave(vendor.id);
+                        }}
+                        className="absolute top-3 right-3 w-8.5 h-8.5 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:scale-110 transition-transform z-20"
+                        title={isSaved(vendor.id) ? "Saved (Click to remove)" : "Save vendor"}
+                      >
+                        <Heart className={`w-4 h-4 transition-colors ${isSaved(vendor.id) ? 'text-red-500 fill-red-500' : 'text-sage-700'}`} />
+                      </button>
                       <div className="absolute bottom-3 left-3 flex items-center gap-2">
                         <div className="flex items-center gap-1 bg-white/20 backdrop-blur-sm rounded-full px-2.5 py-1">
                           <Star className="w-3.5 h-3.5 text-gold-400 fill-gold-400" />
