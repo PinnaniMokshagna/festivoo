@@ -5,7 +5,7 @@ import {
   Calendar, Star, TrendingUp, Clock, CheckCircle2, XCircle,
   Download, ArrowRight, Sparkles, Heart, Wallet, Bell,
   ChevronRight, MapPin, Users, Mail, Phone, FileText, LogOut, Info,
-  Truck, ShieldCheck, MessageSquare, Package, Send, X, PhoneCall, User
+  Truck, ShieldCheck, MessageSquare, Package, Send, X, PhoneCall, User, ZoomIn
 } from 'lucide-react';
 import { useAuth } from '../lib/auth';
 import { supabase } from '../lib/supabase';
@@ -795,6 +795,20 @@ export default function CustomerDashboard() {
   }, [profile, navigate]);
 
   useEffect(() => {
+    const handleOpenModal = () => setShowProfileModal(true);
+    window.addEventListener('open-profile-modal', handleOpenModal);
+
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('editProfile') === 'true') {
+      setShowProfileModal(true);
+    }
+
+    return () => {
+      window.removeEventListener('open-profile-modal', handleOpenModal);
+    };
+  }, []);
+
+  useEffect(() => {
     const fetchBookings = async () => {
       try {
         const { data } = await supabase
@@ -901,14 +915,6 @@ export default function CustomerDashboard() {
                   </div>
                 </div>
               </div>
-
-              {/* Professional Edit Profile Button */}
-              <button
-                onClick={() => setShowProfileModal(true)}
-                className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 text-xs font-bold rounded-xl transition-all flex items-center gap-2 backdrop-blur-md shadow-sm hover:scale-105"
-              >
-                <User className="w-4 h-4 text-gold-400" /> Edit Profile
-              </button>
             </div>
 
             <div className="flex gap-1 mt-4 overflow-x-auto">
@@ -989,8 +995,10 @@ export default function CustomerDashboard() {
                             className="flex items-center gap-4 p-4 bg-sage-50/60 rounded-xl hover:bg-sage-100/80 transition-all cursor-pointer border border-sage-100/80 hover:shadow-md group select-none"
                           >
                             {booking.vendor && (
-                              <div 
+                              <button 
+                                type="button"
                                 onClick={(e) => {
+                                  e.preventDefault();
                                   e.stopPropagation();
                                   if (booking.vendor?.image) {
                                     setPreviewImage({
@@ -1001,7 +1009,7 @@ export default function CustomerDashboard() {
                                     });
                                   }
                                 }}
-                                className="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0 cursor-pointer relative group/img border border-sage-200 shadow-2xs hover:shadow-md transition-all"
+                                className="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0 cursor-pointer relative group/img border border-sage-200 shadow-2xs hover:shadow-md transition-all p-0 bg-transparent block border-0 focus:outline-none"
                                 title="Click to view photo in full size"
                               >
                                 {booking.vendor.image && !booking.vendor.image.includes('pexels.com') ? (
@@ -1011,14 +1019,17 @@ export default function CustomerDashboard() {
                                     onError={(e) => {
                                       e.currentTarget.src = 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=800&q=80';
                                     }}
-                                    className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-300" 
+                                    className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-300 pointer-events-none" 
                                   />
                                 ) : (
-                                  <div className="w-full h-full bg-gradient-to-br from-sage-600 to-sage-800 flex items-center justify-center">
+                                  <div className="w-full h-full bg-gradient-to-br from-sage-600 to-sage-800 flex items-center justify-center pointer-events-none">
                                     <span className="text-white text-xs font-bold">{booking.vendor.category[0] || 'V'}</span>
                                   </div>
                                 )}
-                              </div>
+                                <div className="absolute inset-0 bg-dark-900/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center text-white pointer-events-none">
+                                  <ZoomIn className="w-4 h-4 text-white drop-shadow-md" />
+                                </div>
+                              </button>
                             )}
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2 mb-1">
@@ -1159,8 +1170,10 @@ export default function CustomerDashboard() {
                           className="flex flex-col sm:flex-row sm:items-center gap-4 cursor-pointer select-none"
                         >
                           {booking.vendor && (
-                            <div 
+                            <button 
+                              type="button"
                               onClick={(e) => {
+                                e.preventDefault();
                                 e.stopPropagation();
                                 if (booking.vendor?.image) {
                                   setPreviewImage({
@@ -1171,7 +1184,7 @@ export default function CustomerDashboard() {
                                   });
                                 }
                               }}
-                              className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 cursor-pointer relative group/img border border-sage-200 shadow-2xs hover:shadow-md transition-all"
+                              className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 cursor-pointer relative group/img border border-sage-200 shadow-2xs hover:shadow-md transition-all p-0 bg-transparent block border-0 focus:outline-none"
                               title="Click to view photo in full size"
                             >
                               {booking.vendor.image && !booking.vendor.image.includes('pexels.com') ? (
@@ -1181,14 +1194,17 @@ export default function CustomerDashboard() {
                                   onError={(e) => {
                                     e.currentTarget.src = 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=800&q=80';
                                   }}
-                                  className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-300" 
+                                  className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-300 pointer-events-none" 
                                 />
                               ) : (
-                                <div className="w-full h-full bg-gradient-to-br from-sage-600 to-sage-800 flex items-center justify-center">
+                                <div className="w-full h-full bg-gradient-to-br from-sage-600 to-sage-800 flex items-center justify-center pointer-events-none">
                                   <span className="text-white text-sm font-bold">{booking.vendor.category[0] || 'V'}</span>
                                 </div>
                               )}
-                            </div>
+                              <div className="absolute inset-0 bg-dark-900/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center text-white pointer-events-none">
+                                <ZoomIn className="w-5 h-5 text-white drop-shadow-md" />
+                              </div>
+                            </button>
                           )}
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1">
@@ -2009,7 +2025,7 @@ export default function CustomerDashboard() {
       {previewImage && (
         <div 
           onClick={() => setPreviewImage(null)}
-          className="fixed inset-0 bg-dark-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in duration-200"
+          className="fixed inset-0 bg-dark-900/85 backdrop-blur-md z-[99999] flex items-center justify-center p-4 animate-in fade-in duration-200"
         >
           <div 
             onClick={e => e.stopPropagation()}

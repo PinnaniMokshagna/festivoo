@@ -235,7 +235,8 @@ export default function Navbar() {
                       <button
                         onClick={() => {
                           setShowUserDropdown(false);
-                          navigate('/dashboard');
+                          navigate('/dashboard?editProfile=true');
+                          window.dispatchEvent(new CustomEvent('open-profile-modal'));
                         }}
                         className="w-full flex items-center gap-3 px-3 py-2.5 text-xs font-bold text-sage-800 hover:bg-sage-100/70 rounded-xl transition-colors text-left"
                       >
