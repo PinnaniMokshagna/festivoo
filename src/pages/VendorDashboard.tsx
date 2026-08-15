@@ -60,6 +60,14 @@ export default function VendorDashboard() {
   const location = useLocation();
   const { user, kycStatus } = useAuth();
 
+  const vendorUser = user || {
+    avatar: 'RS',
+    businessName: 'Royal Moments Studio',
+    fullName: 'Aarav Sharma',
+    username: 'aarav.sharma',
+    category: 'Wedding & Event Photography',
+  };
+
   // Determine initial tab from search param ?tab=
   const [activeTab, setActiveTab] = useState<VendorTab>(() => {
     const params = new URLSearchParams(location.search);
@@ -97,17 +105,17 @@ export default function VendorDashboard() {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 rounded-2xl bg-gradient-brand flex items-center justify-center text-white font-extrabold text-2xl shadow-glow">
-                  {user.avatar || 'AS'}
+                  {vendorUser.avatar || 'RS'}
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
                     <h1 className="font-display text-2xl sm:text-3xl font-bold text-white">
-                      {user.businessName || 'Royal Moments Studio'}
+                      {vendorUser.businessName || 'Royal Moments Studio'}
                     </h1>
                     {kycStatus === 'verified' && <VerifiedBadge size="md" />}
                   </div>
                   <p className="text-sage-300 text-sm font-semibold mt-0.5">
-                    Owner: {user.fullName} (@{user.username}) · {user.category}
+                    Owner: {vendorUser.fullName || 'Aarav Sharma'} (@{vendorUser.username || 'aarav.sharma'}) · {vendorUser.category || 'Event Vendor'}
                   </p>
                 </div>
               </div>
