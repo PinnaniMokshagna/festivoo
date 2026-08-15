@@ -90,9 +90,8 @@ export default function VendorDashboard() {
   const listingsView = useInView<HTMLDivElement>();
 
   useEffect(() => {
-    if (!user) { navigate('/auth'); return; }
-    if (profile && profile.role !== 'vendor') { navigate('/vendors'); return; }
-  }, [user, profile, navigate]);
+    navigate('/vendor-dashboard', { replace: true });
+  }, [navigate]);
 
   useEffect(() => {
     if (!user) return;

@@ -82,6 +82,10 @@ export default function App() {
                   <Route path="support" element={<SupportPage />} />
                 </Route>
 
+                {/* Route Aliases for Vendor Portal */}
+                <Route path="/vendor" element={<Navigate to="/vendor-dashboard" replace />} />
+                <Route path="/vendor-portal" element={<Navigate to="/vendor-dashboard" replace />} />
+
                 {/* Catch-all Fallback */}
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
