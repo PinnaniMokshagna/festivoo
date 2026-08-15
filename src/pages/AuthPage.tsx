@@ -123,11 +123,11 @@ export default function AuthPage() {
       // Navigate based on profile role — handled by auth context / redirect effect
       navigate('/vendors');
     } else {
-      if (!role) { setLoading(false); return; }
-      const { error } = await signUp(email, password, name, role);
+      const targetRole = role || 'customer';
+      const { error } = await signUp(email, password, name, targetRole);
       setLoading(false);
       if (error) { setError(error); return; }
-      navigate(role === 'vendor' ? '/vendor-dashboard' : '/vendors');
+      navigate(targetRole === 'vendor' ? '/vendor-dashboard' : '/vendors');
     }
   };
 
