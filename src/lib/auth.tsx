@@ -18,7 +18,7 @@ type AuthContextType = {
   user: User | null;
   profile: Profile | null;
   loading: boolean;
-  signIn: (email: string, password: string) => Promise<{ error: string | null }>;
+  signIn: (email: string, password: string, targetRole?: UserRole) => Promise<{ error: string | null }>;
   signUp: (email: string, password: string, name: string, role: UserRole) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
@@ -83,7 +83,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => listener?.subscription?.unsubscribe();
   }, []);
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = async (email: string, password: string, targetRole?: UserRole) => {
+    const selectedRole = targetRole || 'customer';
     try {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (!error && data?.user) {
@@ -95,7 +96,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     } catch (e) {}
 
-    // Robust local auth fallback
+    // Robust local auth fallback with role persistence
     const localUser = {
       id: `usr_${Date.now()}`,
       email,
@@ -105,7 +106,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const localProfile: Profile = {
       id: localUser.id,
       full_name: email.split('@')[0],
-      role: 'customer',
+      role: selectedRole,
       phone: null,
       city: null,
       avatar_url: null,
@@ -115,6 +116,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setProfile(localProfile);
     localStorage.setItem('festivo_user', JSON.stringify(localUser));
     localStorage.setItem('festivo_profile', JSON.stringify(localProfile));
+
+    if (selectedRole === 'vendor') {
+      const vendorUser = {
+        id: localUser.id,
+        email,
+        fullName: email.split('@')[0],
+        username: email.split('@')[0].toLowerCase(),
+        website: 'https://festivo.in',
+        businessName: `${email.split('@')[0]} Studio`,
+        category: 'Event Provider',
+        phone: '+91 98765 43210',
+        location: 'Mumbai, India',
+        bio: 'Premier service provider on Festivo platform',
+        avatar: 'VN',
+        upiId: `${email.split('@')[0]}@okaxis`,
+        bankAccount: '•••• •••• 1234',
+        ifsc: 'HDFC0001234',
+        usernameHistory: [],
+      };
+      localStorage.setItem('vendor_user_profile', JSON.stringify(vendorUser));
+      localStorage.setItem('vendor_is_authenticated', 'true');
+    }
+
     return { error: null };
   };
 
@@ -138,7 +162,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     } catch (e) {}
 
-    // Local Fallback Account Creation (Guarantees Account Creation Success!)
+    // Local Fallback Account Creation
     const localUserId = `usr_${Date.now()}`;
     const localUser = {
       id: localUserId,

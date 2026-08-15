@@ -116,14 +116,14 @@ export default function AuthPage() {
     }
 
     setLoading(true);
+    const targetRole = role || 'customer';
+
     if (mode === 'signin') {
-      const { error } = await signIn(email, password);
+      const { error } = await signIn(email, password, targetRole);
       setLoading(false);
       if (error) { setError(error); return; }
-      // Navigate based on profile role — handled by auth context / redirect effect
-      navigate('/vendors');
+      navigate(targetRole === 'vendor' ? '/vendor-dashboard' : '/vendors');
     } else {
-      const targetRole = role || 'customer';
       const { error } = await signUp(email, password, name, targetRole);
       setLoading(false);
       if (error) { setError(error); return; }
