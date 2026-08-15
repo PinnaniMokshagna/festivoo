@@ -8,6 +8,8 @@ const navLinks = [
   { label: 'Home', href: '/' },
   { label: 'Explore', href: '/explore' },
   { label: 'Vendors', href: '/vendors' },
+  { label: 'Vendor Portal', href: '/vendor-dashboard' },
+  { label: 'Admin', href: '/admin' },
 ];
 
 export default function Navbar() {

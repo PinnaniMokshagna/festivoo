@@ -20,13 +20,19 @@ const occasionLinks = [
 ];
 
 const staticLinks = {
+  Portals: [
+    { label: 'Vendor Portal', path: '/vendor-dashboard' },
+    { label: 'KYC Document Verification', path: '/vendor-dashboard/verify-documents' },
+    { label: 'Admin Portal', path: '/admin' },
+    { label: 'Customer Dashboard', path: '/dashboard' },
+  ],
   Company: [
     { label: 'How It Works', path: '/explore' },
-    { label: 'Explore', path: '/explore' },
-    { label: 'Partner with Us', path: '/auth' },
+    { label: 'Explore Vendors', path: '/explore' },
+    { label: 'Register as Vendor', path: '/auth' },
   ],
   Support: [
-    { label: 'Help Center', path: '/' },
+    { label: 'Help Center', path: '/vendor-dashboard/support' },
     { label: 'Terms of Service', path: '/' },
     { label: 'Privacy Policy', path: '/' },
   ],
