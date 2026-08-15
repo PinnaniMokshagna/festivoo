@@ -5,9 +5,8 @@ import { AuthProvider as VendorAuthProvider } from './context/AuthContext';
 import { DataProvider as VendorDataProvider } from './context/DataContext';
 import HomePage from './pages/HomePage';
 import ScrollToTop from './components/ScrollToTop';
-import { VendorPortalLayout } from './components/dashboard/VendorPortalLayout';
 
-// Core routes
+// Core Application Pages
 const VendorsPage = lazy(() => import('./pages/VendorsPage'));
 const VendorDetailPage = lazy(() => import('./pages/VendorDetailPage'));
 const BookingPage = lazy(() => import('./pages/BookingPage'));
@@ -18,20 +17,8 @@ const CustomerDashboard = lazy(() => import('./pages/CustomerDashboard'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const CategoryDetailPage = lazy(() => import('./pages/CategoryDetailPage'));
 
-// Vendor Portal Sub-pages
-const VendorDashboardPage = lazy(() => import('./pages/dashboard-page'));
-const VerifyDocumentsPage = lazy(() => import('./pages/verify-documents-page'));
-const BookingsPage = lazy(() => import('./pages/bookings-page'));
-const CalendarPage = lazy(() => import('./pages/calendar-page'));
-const MessagesPage = lazy(() => import('./pages/messages-page'));
-const PortfolioPage = lazy(() => import('./pages/portfolio-page'));
-const PackagesPage = lazy(() => import('./pages/packages-page'));
-const ReviewsPage = lazy(() => import('./pages/reviews-page'));
-const EarningsPage = lazy(() => import('./pages/earnings-page'));
-const AnalyticsPage = lazy(() => import('./pages/analytics-page'));
-const DealsPage = lazy(() => import('./pages/deals-page'));
-const SettingsPage = lazy(() => import('./pages/settings-page'));
-const SupportPage = lazy(() => import('./pages/support-page'));
+// Integrated Vendor Dashboard
+const VendorDashboard = lazy(() => import('./pages/VendorDashboard'));
 
 function PageLoader() {
   return (
@@ -65,24 +52,8 @@ export default function App() {
                 <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="/category/:category" element={<CategoryDetailPage />} />
 
-                {/* Complete Vendor Dashboard Portal Routes */}
-                <Route path="/vendor-dashboard" element={<VendorPortalLayout />}>
-                  <Route index element={<VendorDashboardPage />} />
-                  <Route path="verify-documents" element={<VerifyDocumentsPage />} />
-                  <Route path="bookings" element={<BookingsPage />} />
-                  <Route path="calendar" element={<CalendarPage />} />
-                  <Route path="messages" element={<MessagesPage />} />
-                  <Route path="portfolio" element={<PortfolioPage />} />
-                  <Route path="packages" element={<PackagesPage />} />
-                  <Route path="reviews" element={<ReviewsPage />} />
-                  <Route path="earnings" element={<EarningsPage />} />
-                  <Route path="analytics" element={<AnalyticsPage />} />
-                  <Route path="deals" element={<DealsPage />} />
-                  <Route path="settings" element={<SettingsPage />} />
-                  <Route path="support" element={<SupportPage />} />
-                </Route>
-
-                {/* Route Aliases for Vendor Portal */}
+                {/* Complete Integrated Vendor Dashboard */}
+                <Route path="/vendor-dashboard" element={<VendorDashboard />} />
                 <Route path="/vendor" element={<Navigate to="/vendor-dashboard" replace />} />
                 <Route path="/vendor-portal" element={<Navigate to="/vendor-dashboard" replace />} />
 
